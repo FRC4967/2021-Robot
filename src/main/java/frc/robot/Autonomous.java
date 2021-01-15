@@ -10,6 +10,7 @@ Why: IDK
 */
 package frc.robot;
 
+import java.lang.Math;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.Timer;
@@ -28,6 +29,7 @@ public class Autonomous {
     static int shootTracker = 0;
     static int routineTracker = 0;
     static int spinTracker = 0;
+    static int stracker = 0;
     // more variables
     static final double trapPositon = 65;
     boolean timerForwardStarted = false;
@@ -66,7 +68,7 @@ public class Autonomous {
 
     /**
      * 
-     * @param speed speed at which to travel (-1,1)
+     * @param speed    speed at which to travel (-1,1)
      * @param distance distance to feed encoder
      */
     public static void calibrationDrive(double speed, double distance) {
@@ -288,15 +290,35 @@ public class Autonomous {
 
     // for driving in arcs. As you can see, this does nothing right now.
     public static void arcDrive() {
+    }
 
+    public static void s_drive() {
+        switch (stracker) {
+            case 0:
+                Drive_Train.RightMotorEncoder.setPosition(0);
+                Drive_Train.LeftMotorEncoder.setPosition(0);
+                stracker++;
+                break;
+            case 1:
+                if (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) < 8.2) {// 8.1
+                    Drive_Train.RightMotor.set(-0.2);
+                    Drive_Train.LeftMotor.set(-0.2);
+                } else {
+                    stracker++;
+                }
+
+                break;
+            case 2:
+                Drive_Train.RightMotor.set(0);
+                Drive_Train.LeftMotor.set(0);
+                break;
+        }
     }
 
     public static boolean spindrive() {
         // Function to make robot spin
         switch (spinTracker) {
             case 0: // initialize timer.
-
-                
 
                 timerShooter.stop();
                 timerShooter.reset();
@@ -308,8 +330,9 @@ public class Autonomous {
                 System.out.println("Case One");
 
                 PFFDriveSpin(0.25, 0, Drive_Train.spinDistanceCalculator(30));
-                if (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) > -Drive_Train.spinDistanceCalculator(30)+1
-                        && Math.abs(Drive_Train.LeftMotorEncoder.getPosition()) > Drive_Train.spinDistanceCalculator(30)-1) {
+                if (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) > -Drive_Train.spinDistanceCalculator(30) + 1
+                        && Math.abs(Drive_Train.LeftMotorEncoder.getPosition()) > Drive_Train.spinDistanceCalculator(30)
+                                - 1) {
 
                     spinTracker = 2;
 
@@ -317,16 +340,14 @@ public class Autonomous {
                 break;
             case 2:
                 stopDriving();
-                
+
                 // routineTracker++;
 
                 break;
 
-                
-
         }
-        if(spinTracker==2){
-        return true;
+        if (spinTracker == 2) {
+            return true;
         } else {
             return false;
         }

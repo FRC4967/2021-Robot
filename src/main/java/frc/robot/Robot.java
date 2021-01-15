@@ -123,6 +123,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    Autonomous.stracker=0;
     Autonomous.first =true;
     SmartDashboard.putNumber("dP", 0);
     SmartDashboard.putNumber("position", 0);
@@ -144,6 +145,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
+    Autonomous.s_drive();
     /**I commented out test stuff for now. No auton functions currently set to run. 
      * 
      * Default is OldImprovedAutonPID I believe.
@@ -162,3 +164,4 @@ public class Robot extends TimedRobot {
     **/
 }
 }
+

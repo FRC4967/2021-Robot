@@ -38,8 +38,8 @@ public class Drive_Train {
     public static ControlType kVelocity;
 
     public static void DriveInit() {
-        LeftMotor.setIdleMode(IdleMode.kCoast);
-        RightMotor.setIdleMode(IdleMode.kCoast);
+        LeftMotor.setIdleMode(IdleMode.kBrake);
+        RightMotor.setIdleMode(IdleMode.kBrake);
         RightMotor.setInverted(false);
 
     }
