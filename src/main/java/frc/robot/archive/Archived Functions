@@ -1,0 +1,50 @@
+CAMERA DRIVE
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.vision.VisionThread;
+*/
+//For functions we will likely never use but we may want to keep around if serious revision happens.
+
+public class Archived_Functions {
+  //cameraDrive Method
+    /*static GripPipeline gripPipeline = new GripPipeline();
+    static VisionThread visionThread;
+    static UsbCamera EyeBall = CameraServer.getInstance().startAutomaticCapture(); 
+
+
+    public static void cameraDrive(){ 
+   
+   
+    visionThread = new VisionThread(EyeBall, new GripPipeline(), pipeline ->   {
+      
+    
+      System.out.println("hello");
+    });
+    visionThread.start();
+    }
+    */
+}
+
+AUTONOMOUS Archived_Functions
+    public static void drivefromInit(double speed, double distance, int r) {
+        //original function to drive from init. Do not use, this is here for archive/reference,
+        if (Drive_Train.LeftMotorEncoder.getPosition() < distance
+                && Drive_Train.RightMotorEncoder.getPosition() < distance) {
+            autoDrive(speed, speed);
+            System.out.println("Straight Drive");
+        } /*
+           * else if (Drive_Train.LeftMotorEncoder.getPosition() < distance) {
+           * autoDrive(0.5 * speed, 0); System.out.println("Left correction");
+           * 
+           * } else if (Drive_Train.RightMotorEncoder.getPosition() < distance) {
+           * autoDrive(0, 0.5 * speed); System.out.println("right correction");
+           */
+        else {
+            autoDrive(0, 0);
+            conditionalStraightDrive = false;
+
+        }
+        System.out.println("Position" + Drive_Train.RightMotorEncoder.getPosition());
+        System.out.println("Position" + Drive_Train.LeftMotorEncoder.getPosition());
+    }
+
