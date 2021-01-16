@@ -297,11 +297,12 @@ public class Autonomous {
                 Drive_Train.LeftMotorEncoder.setPosition(0);
                 stracker++;
                 break;
-            case 1:
-                if (((power <0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) < 8.2*wheelfactor*distance/24)) 
-                || ((power>0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition())<8.1*wheelfactor*distance/24))) {
+            case 1: // *wheelfactor*distance/24
+                if (((power <0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) < 6 * wheelfactor* distance/ 24)) 
+                || ((power>0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition())<6* wheelfactor* distance / 24))) {
                     Drive_Train.RightMotor.set(power);
                     Drive_Train.LeftMotor.set(power);
+                    System.out.println(Drive_Train.RightMotorEncoder.getPosition());
                 }
                 else {
                     stracker++;

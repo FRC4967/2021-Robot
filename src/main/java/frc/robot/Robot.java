@@ -15,9 +15,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 //import java.util.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.TimedRobot;
 //import edu.wpi.first.networktables.NetworkTableInstance;
@@ -62,9 +60,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     //start dual camera (OUTDATED. USE LIMELIGHT)
-    camera1 = CameraServer.getInstance().startAutomaticCapture(1);
-    camera2 = CameraServer.getInstance().startAutomaticCapture(0);
-    cameraSelection = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
+    
     FinalShooter.MidRange();
     SmartDashboard.putNumber("P", FinalShooter.kP);
     
