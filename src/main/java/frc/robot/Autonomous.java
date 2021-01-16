@@ -45,6 +45,7 @@ public class Autonomous {
     static boolean first = true;
     static boolean firstDrive = true;
 
+
     static TrapezoidalMove trap = new TrapezoidalMove();
 
     // basic "code block" functions to save time repeatedly typing code.
@@ -292,7 +293,7 @@ public class Autonomous {
     public static void arcDrive() {
     }
 
-    public static void s_drive() {
+    public static void s_drive(double position) {
         switch (stracker) {
             case 0:
                 Drive_Train.RightMotorEncoder.setPosition(0);
@@ -300,10 +301,12 @@ public class Autonomous {
                 stracker++;
                 break;
             case 1:
-                if (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) < 8.2) {// 8.1
-                    Drive_Train.RightMotor.set(-0.2);
-                    Drive_Train.LeftMotor.set(-0.2);
-                } else {
+                if (((position <0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) < 8.2)) 
+                || ((position>0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition())<8.1))) {
+                    Drive_Train.RightMotor.set(position);
+                    Drive_Train.LeftMotor.set(position);
+                }
+                else {
                     stracker++;
                 }
 
