@@ -290,11 +290,7 @@ public class Autonomous {
         }
     }
 
-    // for driving in arcs. As you can see, this does nothing right now.
-    public static void arcDrive() {
-    }
-
-    public static void s_drive(double power,double position) {
+    public static void s_drive(double power,double distance) {
         switch (stracker) {
             case 0:
                 Drive_Train.RightMotorEncoder.setPosition(0);
@@ -302,10 +298,10 @@ public class Autonomous {
                 stracker++;
                 break;
             case 1:
-                if (((position <0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) < 8.2*wheelfactor*position)) 
-                || ((position>0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition())<8.1*wheelfactor*position))) {
-                    Drive_Train.RightMotor.set(position);
-                    Drive_Train.LeftMotor.set(position);
+                if (((distance <0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) < 8.2*wheelfactor*distance)) 
+                || ((distance>0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition())<8.1*wheelfactor*distance))) {
+                    Drive_Train.RightMotor.set(power);
+                    Drive_Train.LeftMotor.set(power);
                 }
                 else {
                     stracker++;
