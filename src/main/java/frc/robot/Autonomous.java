@@ -33,7 +33,7 @@ public class Autonomous {
     // more variables
     static final double trapPositon = 65;
     boolean timerForwardStarted = false;
-    static double wheelfactor = 6*Math.PI/12;
+    static double wheelfactor = 6*Math.PI;
     // pid variables for shooter
     static double p;
     static double i;
@@ -298,8 +298,8 @@ public class Autonomous {
                 stracker++;
                 break;
             case 1:
-                if (((distance <0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) < 8.2*wheelfactor*distance)) 
-                || ((distance>0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition())<8.1*wheelfactor*distance))) {
+                if (((power <0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) < 8.2*wheelfactor*distance/24)) 
+                || ((power>0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition())<8.1*wheelfactor*distance/24))) {
                     Drive_Train.RightMotor.set(power);
                     Drive_Train.LeftMotor.set(power);
                 }
