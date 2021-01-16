@@ -33,6 +33,7 @@ public class Autonomous {
     // more variables
     static final double trapPositon = 65;
     boolean timerForwardStarted = false;
+    static double wheelfactor = 6*Math.PI/12;
     // pid variables for shooter
     static double p;
     static double i;
@@ -293,7 +294,7 @@ public class Autonomous {
     public static void arcDrive() {
     }
 
-    public static void s_drive(double position) {
+    public static void s_drive(double power,double position) {
         switch (stracker) {
             case 0:
                 Drive_Train.RightMotorEncoder.setPosition(0);
@@ -301,8 +302,8 @@ public class Autonomous {
                 stracker++;
                 break;
             case 1:
-                if (((position <0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) < 8.2)) 
-                || ((position>0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition())<8.1))) {
+                if (((position <0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) < 8.2*wheelfactor*position)) 
+                || ((position>0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition())<8.1*wheelfactor*position))) {
                     Drive_Train.RightMotor.set(position);
                     Drive_Train.LeftMotor.set(position);
                 }

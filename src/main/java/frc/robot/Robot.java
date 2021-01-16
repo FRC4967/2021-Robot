@@ -145,7 +145,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    Autonomous.s_drive(0.2);
+    Autonomous.s_drive(0.2,1);
     /**I commented out test stuff for now. No auton functions currently set to run. 
      * 
      * Default is OldImprovedAutonPID I believe.
