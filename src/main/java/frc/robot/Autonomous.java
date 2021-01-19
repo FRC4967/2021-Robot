@@ -5,7 +5,8 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 /*
-Author: Aidan Bradley and Aidan Bradley                                                                                                                                                                                                                                                                                                                                                                    and Raven St.Clair
+Author: Aidan Bradley and Aidan Bradley
+            -"Wait, there's two of you?! The horror!" - Raven St. Clair                                                                                                                                                                                                                                                                                                                                                                    and Raven St.Clair
 Why: IDK
 */
 package frc.robot;
@@ -30,10 +31,12 @@ public class Autonomous {
     static int routineTracker = 0;
     static int spinTracker = 0;
     static int stracker = 0;
+    static int arctracker = 0;
     // more variables
     static final double trapPositon = 65;
     boolean timerForwardStarted = false;
-    static double wheelfactor = 6*Math.PI;
+    static double wheelfactor = 6 * Math.PI;
+    static double conversionFactor = 6*6*Math.PI/12; //(gearbox ratio * wheel diameter * pi / 12 inches per foot). For setting conversion factor
     // pid variables for shooter
     static double p;
     static double i;
@@ -45,7 +48,11 @@ public class Autonomous {
     static double speedBottom = 5500;
     static boolean first = true;
     static boolean firstDrive = true;
-
+    //arguments for circle drive
+    static double d_IN;
+    static double d_OUT;
+    static double d_RIGHT;
+    static double d_LEFT;
 
     static TrapezoidalMove trap = new TrapezoidalMove();
 
@@ -112,7 +119,23 @@ public class Autonomous {
     public static void PFFDriveLeft(double P, double dff, double position) {
         // Drive Train Conversion Factors in inches
         // Gearbox ratio = 10.71
-        Drive_Train.LeftMotorEncoder.setPositionConversionFactor(1.7616);
+        Drive_Train.LeftMotorEncoder.setPositionConversionFactor(1.7616); //This apparently converts encoder to inches
+                                                                            //should be tested, might solve our problems.
+        Drive_Train.leftDrivePID.setFF(dff);
+        Drive_Train.leftDrivePID.setP(P);
+        Drive_Train.leftDrivePID.setReference(position, ControlType.kPosition);
+    }
+
+    /**
+     * 
+     * @param P - Proportional
+     * @param dff - FeedForward
+     * @param position - target displacement
+     * @param ConversionFactor - empirically determine
+     */
+    public static void PFFDriveLeft(double P, double dff, double position, double ConversionFactor){
+        //override to set conversion factor
+        Drive_Train.LeftMotorEncoder.setPositionConversionFactor(ConversionFactor);
         Drive_Train.leftDrivePID.setFF(dff);
         Drive_Train.leftDrivePID.setP(P);
         Drive_Train.leftDrivePID.setReference(position, ControlType.kPosition);
@@ -127,6 +150,41 @@ public class Autonomous {
         Drive_Train.rightDrivePID.setReference(position, ControlType.kPosition);
 
     }
+
+    public static void PFFDriveRight(double P, double dff, double position, double ConversionFactor) {
+        // Drive Train Conversion Factors in inches
+        // Gearbox ratio = 10.71
+        Drive_Train.RightMotorEncoder.setPositionConversionFactor(ConversionFactor);
+        Drive_Train.rightDrivePID.setFF(dff);
+        Drive_Train.rightDrivePID.setP(P);
+        Drive_Train.rightDrivePID.setReference(position, ControlType.kPosition);
+
+    }
+
+    /**
+     * 
+     * @param midR radius of circle traced by center of object
+     * @param radDiff radDiff difference between center and edges
+     * @return array containing {inner_circumference, outer_circumference}
+     */
+    public static double[] calArcLengths(double midR, double radDiff){
+        double [] circumferences = {2*Math.PI*(midR-radDiff), 2*Math.PI*(midR+radDiff)};
+        return circumferences;
+    };
+
+
+    /**
+     * calculates arclength
+     * @param midR - radius of circle traced by center of object
+     * @param radDiff difference between center and edges
+     * @param theta angle of arc in RADIANS
+     * @return array containing {inner_Displacement, outer_Displacement}
+     */
+    public static double[] calArcLengths(double midR, double radDiff,double theta){
+        // s =  rθ
+        double [] circumferences = {2*Math.PI*(midR-radDiff)*theta, 2*Math.PI*(midR+radDiff)*theta};
+        return circumferences;
+    };
 
     public static void shootSequence(boolean Auto, double position) {
         // Sequence for shooters. To be used in ALL code, not just auton
@@ -183,6 +241,7 @@ public class Autonomous {
                 timerForward.start();
                 autoTracker++;
                 break;
+                //any ideas on what this timer actually does? I don't see it used anywhere.
             case 1:
                 PFFDriveStraight(0.25, 0, position);
 
@@ -290,7 +349,7 @@ public class Autonomous {
         }
     }
 
-    public static void s_drive(double power,double distance) {
+    public static void s_drive(double power, double distance) {
         switch (stracker) {
             case 0:
                 Drive_Train.RightMotorEncoder.setPosition(0);
@@ -298,13 +357,14 @@ public class Autonomous {
                 stracker++;
                 break;
             case 1: // *wheelfactor*distance/24
-                if (((power <0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) < 6 * wheelfactor* distance/ 24)) 
-                || ((power>0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition())<6* wheelfactor* distance / 24))) {
+                if (((power < 0)
+                        && (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) < 6 * wheelfactor * distance / 24))
+                        || ((power > 0) && (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) < 6 * wheelfactor
+                                * distance / 24))) {
                     Drive_Train.RightMotor.set(power);
                     Drive_Train.LeftMotor.set(power);
                     System.out.println(Drive_Train.RightMotorEncoder.getPosition());
-                }
-                else {
+                } else {
                     stracker++;
                 }
 
@@ -314,6 +374,51 @@ public class Autonomous {
                 Drive_Train.LeftMotor.set(0);
                 break;
         }
+    }
+
+    /**
+     * 
+     * @param radius - radius traced by center point
+     * @param theta - angle of arc-segment to be traced by robot
+     * @param P - PID P, try 0
+     * @param dFF - PID feed forward, try something like 0.25 and test other values
+     * @param clockwise - checks direction we want robot to rotate in.
+     */
+    public static void circlePID(double radius, double theta, double P, double dFF,boolean clockwise) {
+        //try this for circle drive
+        switch (arctracker) {
+            case 0:
+                Drive_Train.RightMotorEncoder.setPosition(0);
+                Drive_Train.LeftMotorEncoder.setPosition(0);
+                d_IN = calArcLengths(radius,Drive_Train.BASE_WIDTH/24,theta)[0];
+                d_OUT = calArcLengths(radius,Drive_Train.BASE_WIDTH/24,theta)[1];
+                //loop to check which wheel will travel shortest distance
+                if(clockwise == true){
+                    d_RIGHT = d_IN;
+                    d_LEFT = d_OUT;
+                }
+                else{
+                    d_RIGHT = d_OUT;
+                    d_LEFT = d_IN;
+                }
+                arctracker++;
+            case 1:
+                /*Try changing conversion factor
+                Also, try entering radius, distance, and etc. in inches and using PFFDrive without the conversion parameter. (I made it optional).
+                 */
+                PFFDriveLeft(P, dFF, d_LEFT, conversionFactor);
+                PFFDriveRight(P, dFF, d_RIGHT,conversionFactor);
+                if ((Math.abs(Math.abs(Drive_Train.RightMotorEncoder.getPosition())-Math.abs(d_RIGHT))<0.1) ||
+                (Math.abs(Math.abs(Drive_Train.LeftMotorEncoder.getPosition())-Math.abs(d_LEFT))<0.1)){
+                    arctracker++;
+                }
+            case 2:
+                stopDriving();
+
+
+
+        }
+
     }
 
     public static boolean spindrive() {

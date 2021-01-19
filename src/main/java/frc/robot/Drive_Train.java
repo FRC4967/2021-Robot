@@ -37,6 +37,8 @@ public class Drive_Train {
     public static CANPIDController leftDrivePID = new CANPIDController(LeftMotor);
     public static ControlType kVelocity;
 
+    public static double BASE_WIDTH = 26; //inches
+
     public static void DriveInit() {
         LeftMotor.setIdleMode(IdleMode.kBrake);
         RightMotor.setIdleMode(IdleMode.kBrake);
