@@ -116,16 +116,6 @@ public class Autonomous {
         PFFDriveRight(P, dff, -position);
     }
 
-    public static void PFFDriveLeft(double P, double dff, double position) {
-        // Drive Train Conversion Factors in inches
-        // Gearbox ratio = 10.71
-        Drive_Train.LeftMotorEncoder.setPositionConversionFactor(1.7616); //This apparently converts encoder to inches
-                                                                            //should be tested, might solve our problems.
-        Drive_Train.leftDrivePID.setFF(dff);
-        Drive_Train.leftDrivePID.setP(P);
-        Drive_Train.leftDrivePID.setReference(position, ControlType.kPosition);
-    }
-
     /**
      * 
      * @param P - Proportional
@@ -133,44 +123,25 @@ public class Autonomous {
      * @param position - target displacement
      * @param ConversionFactor - empirically determine
      */
-    public static void PFFDriveLeft(double P, double dff, double position, double ConversionFactor){
+    public static void PFFDriveLeft(double P, double dff, double position){
         //override to set conversion factor
-        Drive_Train.LeftMotorEncoder.setPositionConversionFactor(ConversionFactor);
+        Drive_Train.LeftMotorEncoder.setPositionConversionFactor(conversionFactor);
         Drive_Train.leftDrivePID.setFF(dff);
         Drive_Train.leftDrivePID.setP(P);
         Drive_Train.leftDrivePID.setReference(position, ControlType.kPosition);
     }
 
+
     public static void PFFDriveRight(double P, double dff, double position) {
         // Drive Train Conversion Factors in inches
         // Gearbox ratio = 10.71
-        Drive_Train.RightMotorEncoder.setPositionConversionFactor(1.7616);
+        Drive_Train.RightMotorEncoder.setPositionConversionFactor(conversionFactor);
         Drive_Train.rightDrivePID.setFF(dff);
         Drive_Train.rightDrivePID.setP(P);
         Drive_Train.rightDrivePID.setReference(position, ControlType.kPosition);
 
     }
 
-    public static void PFFDriveRight(double P, double dff, double position, double ConversionFactor) {
-        // Drive Train Conversion Factors in inches
-        // Gearbox ratio = 10.71
-        Drive_Train.RightMotorEncoder.setPositionConversionFactor(ConversionFactor);
-        Drive_Train.rightDrivePID.setFF(dff);
-        Drive_Train.rightDrivePID.setP(P);
-        Drive_Train.rightDrivePID.setReference(position, ControlType.kPosition);
-
-    }
-
-    /**
-     * 
-     * @param midR radius of circle traced by center of object
-     * @param radDiff radDiff difference between center and edges
-     * @return array containing {inner_circumference, outer_circumference}
-     */
-    public static double[] calArcLengths(double midR, double radDiff){
-        double [] circumferences = {2*Math.PI*(midR-radDiff), 2*Math.PI*(midR+radDiff)};
-        return circumferences;
-    };
 
 
     /**
@@ -180,10 +151,11 @@ public class Autonomous {
      * @param theta angle of arc in RADIANS
      * @return array containing {inner_Displacement, outer_Displacement}
      */
-    public static double[] calArcLengths(double midR, double radDiff,double theta){
+    public static double[] calArcLengths(double midR,double theta){
         // s =  rθ
-        double [] circumferences = {2*Math.PI*(midR-radDiff)*theta, 2*Math.PI*(midR+radDiff)*theta};
-        return circumferences;
+        double radDiff = Drive_Train.BASE_WIDTH/24;
+        double [] arkLength = {2*Math.PI*(midR-radDiff)*theta, 2*Math.PI*(midR+radDiff)*theta};
+        return arkLength;
     };
 
     public static void shootSequence(boolean Auto, double position) {
@@ -390,8 +362,8 @@ public class Autonomous {
             case 0:
                 Drive_Train.RightMotorEncoder.setPosition(0);
                 Drive_Train.LeftMotorEncoder.setPosition(0);
-                d_IN = calArcLengths(radius,Drive_Train.BASE_WIDTH/24,theta)[0];
-                d_OUT = calArcLengths(radius,Drive_Train.BASE_WIDTH/24,theta)[1];
+                d_IN = calArcLengths(radius,theta)[0];
+                d_OUT = calArcLengths(radius,theta)[1];
                 //loop to check which wheel will travel shortest distance
                 if(clockwise == true){
                     d_RIGHT = d_IN;
@@ -406,10 +378,12 @@ public class Autonomous {
                 /*Try changing conversion factor
                 Also, try entering radius, distance, and etc. in inches and using PFFDrive without the conversion parameter. (I made it optional).
                  */
-                PFFDriveLeft(P, dFF, d_LEFT, conversionFactor);
-                PFFDriveRight(P, dFF, d_RIGHT,conversionFactor);
-                if ((Math.abs(Math.abs(Drive_Train.RightMotorEncoder.getPosition())-Math.abs(d_RIGHT))<0.1) ||
-                (Math.abs(Math.abs(Drive_Train.LeftMotorEncoder.getPosition())-Math.abs(d_LEFT))<0.1)){
+                PFFDriveLeft(P, dFF, d_LEFT);
+                PFFDriveRight(P, dFF, d_RIGHT);
+                double travledRight = Drive_Train.RightMotorEncoder.getPosition();
+                double traveledLeft = Drive_Train.LeftMotorEncoder.getPosition();
+                if ((Math.abs(Math.abs(travledRight)-Math.abs(d_RIGHT))<0.1) ||
+                (Math.abs(Math.abs(traveledLeft)-Math.abs(d_LEFT))<0.1)){
                     arctracker++;
                 }
             case 2:
