@@ -135,6 +135,9 @@ public class Robot extends TimedRobot {
     Drive_Train.LeftMotorEncoder.setPosition(0);
     Drive_Train.RightMotorEncoder.setPosition(0);
     System.out.println(Drive_Train.RightMotorEncoder.getPosition());
+    Drive_Train.RightMotorEncoder.setPositionConversionFactor(Autonomous.conversionFactor);
+    Drive_Train.LeftMotorEncoder.setPositionConversionFactor(Autonomous.conversionFactor);
+
     Autonomous.arctracker = 0;
     //trap.SetAll(40, 60,60, 55);
   } 
@@ -142,7 +145,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     //Autonomous.s_drive(0.2,1);
-    Autonomous.circlePID(3, Math.PI/2, 0.1, 0.15, false);
+    Autonomous.PFFDriveStraight(0.005, 0.15, 1);
     
     /**I commented out test stuff for now. No auton functions currently set to run. 
      * 

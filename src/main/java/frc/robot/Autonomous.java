@@ -36,7 +36,7 @@ public class Autonomous {
     static final double trapPositon = 65;
     boolean timerForwardStarted = false;
     static double wheelfactor = 6 * Math.PI;
-    static double conversionFactor = 6*6*Math.PI/12; //(gearbox ratio * wheel diameter * pi / 12 inches per foot). For setting conversion factor
+    static double conversionFactor = 1/(6*6*Math.PI/24); //(gearbox ratio * wheel diameter * pi / 12 inches per foot). For setting conversion factor
     // pid variables for shooter
     static double p;
     static double i;
@@ -105,8 +105,16 @@ public class Autonomous {
     public static void PFFDriveStraight(double P, double dff, double position) {
         // Drive Train Conversion Factors in inches
         // Gearbox ratio = 10.71
-        PFFDriveLeft(P, dff, position);
-        PFFDriveRight(P, dff, position);
+        if (Drive_Train.RightMotorEncoder.getPosition()<=position ||
+         Drive_Train.LeftMotorEncoder.getPosition()<=position){
+            SmartDashboard.putNumber("right pos", Math.abs(Drive_Train.RightMotorEncoder.getPosition()));
+            SmartDashboard.putNumber("left pos", Math.abs(Drive_Train.LeftMotorEncoder.getPosition()));    
+            PFFDriveLeft(P, dff, position);
+            PFFDriveRight(P, dff, position);
+        }
+        else{
+            stopDriving();
+        }
     }
 
     public static void PFFDriveSpin(double P, double dff, double position) {
