@@ -60,6 +60,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     //start dual camera (OUTDATED. USE LIMELIGHT)
+    TestOpenFile.createFile();
     
     FinalShooter.MidRange();
     SmartDashboard.putNumber("P", FinalShooter.kP);
