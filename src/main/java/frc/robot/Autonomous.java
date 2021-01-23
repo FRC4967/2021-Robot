@@ -107,8 +107,8 @@ public class Autonomous {
         // Gearbox ratio = 10.71
         if (Drive_Train.RightMotorEncoder.getPosition()<=position ||
          Drive_Train.LeftMotorEncoder.getPosition()<=position){
-            SmartDashboard.putNumber("right pos", Math.abs(Drive_Train.RightMotorEncoder.getPosition()));
-            SmartDashboard.putNumber("left pos", Math.abs(Drive_Train.LeftMotorEncoder.getPosition()));    
+            SmartDashboard.putNumber("right pos", Drive_Train.RightMotorEncoder.getPosition());
+            SmartDashboard.putNumber("left pos", Drive_Train.LeftMotorEncoder.getPosition());    
             PFFDriveLeft(P, dff, position);
             PFFDriveRight(P, dff, position);
         }
@@ -207,7 +207,6 @@ public class Autonomous {
         }
 
     }
-
     public static void MovePID(double position) {
         // PID movement control for trapezoidal movement.
         SmartDashboard.putNumber("right pos", Drive_Train.RightMotorEncoder.getPosition());
@@ -219,11 +218,14 @@ public class Autonomous {
                 timerForward.stop();
                 timerForward.reset();
                 timerForward.start();
+                trap.SetAll(0.5, 0.5, 0.5, position);
                 autoTracker++;
                 break;
                 //any ideas on what this timer actually does? I don't see it used anywhere.
             case 1:
-                PFFDriveStraight(0.25, 0, position);
+                trap.Position(timerForward.get());
+                PFFDriveStraight(0.25, 0, trap.Position(timerForward.get()));
+                SmartDashboard.putNumber("expected_positon R", trap.Position(timerForward.get()));
 
         }
 
