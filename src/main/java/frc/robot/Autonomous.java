@@ -36,7 +36,7 @@ public class Autonomous {
     static final double trapPositon = 65;
     boolean timerForwardStarted = false;
     static double wheelfactor = 6 * Math.PI;
-    static double conversionFactor = 1/(6*6*Math.PI/24); //(gearbox ratio * wheel diameter * pi / 12 inches per foot). For setting conversion factor
+    static double conversionFactor = 1/((2*72)/(6*Math.PI));// (1/rev)(6 rev/wheel turn)*(1 wt)/(2*pi*3 inches)*(12 inch/ft))^-1
     // pid variables for shooter
     static double p;
     static double i;
@@ -161,7 +161,7 @@ public class Autonomous {
      */
     public static double[] calArcLengths(double midR,double theta){
         // s =  rθ
-        double radDiff = Drive_Train.BASE_WIDTH/24;
+        double radDiff = Drive_Train.BASE_WIDTH/12;
         double [] arkLength = {2*Math.PI*(midR-radDiff)*theta, 2*Math.PI*(midR+radDiff)*theta};
         return arkLength;
     };
@@ -415,7 +415,7 @@ public class Autonomous {
                 initialPos = Drive_Train.RightMotorEncoder.getPosition();
                 spinTracker = 1;
                 break;
-            case 1:
+            case 1: 
 
                 System.out.println("Case One");
 

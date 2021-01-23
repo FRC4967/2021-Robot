@@ -125,10 +125,12 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("position", 0);
     Autonomous.timerForward.reset();
     Drive_Train.RightMotor.restoreFactoryDefaults();
+    Drive_Train.LeftMotor.restoreFactoryDefaults();
     Drive_Train.DriveInit();
     Intake.Soubway.set(ControlMode.PercentOutput, 0);
     
     Drive_Train.RightMotor.setInverted(false);
+    Drive_Train.LeftMotor.setInverted(true);
     Autonomous.autoTracker = 0;
     Autonomous.shootTracker = 0;
     Autonomous.routineTracker = 0;
@@ -137,7 +139,7 @@ public class Robot extends TimedRobot {
     System.out.println(Drive_Train.RightMotorEncoder.getPosition());
     Drive_Train.RightMotorEncoder.setPositionConversionFactor(Autonomous.conversionFactor);
     Drive_Train.LeftMotorEncoder.setPositionConversionFactor(Autonomous.conversionFactor);
-
+    Autonomous.PFFDriveStraight(0.25, 0, 0);
     Autonomous.arctracker = 0;
     //trap.SetAll(40, 60,60, 55);
   } 
@@ -145,7 +147,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     //Autonomous.s_drive(0.2,1);
-    Autonomous.MovePID(1);
+    Autonomous.MovePID(2);
     
     /**I commented out test stuff for now. No auton functions currently set to run. 
      * 
