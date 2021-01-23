@@ -146,9 +146,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    //Autonomous.s_drive(0.2,1);
-    Autonomous.MovePID(2);
-    
+    //Autonomous.s_drive(0.25,1);
+    //Autonomous.MovePID(2);
+    Autonomous.circlePID(2, Math.PI/2, 0.25, 0, false);
     /**I commented out test stuff for now. No auton functions currently set to run. 
      * 
      * Default is OldImprovedAutonPID I believe.
