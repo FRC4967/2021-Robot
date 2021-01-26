@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
 //import frc.robot.Drive_Train;
 
 //import edu.wpi.first.wpilibj.I2C;
@@ -60,7 +58,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     //start dual camera (OUTDATED. USE LIMELIGHT)
-    TestOpenFile.createFile();
+    TestOpenFile.createFile("learn_mode");
     
     FinalShooter.MidRange();
     SmartDashboard.putNumber("P", FinalShooter.kP);
@@ -108,8 +106,8 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     //resets
+    Autonomous.autonDis();
     Drive_Train.RobotDis();
-
     Intake.intakeDis();
   }
 
@@ -120,52 +118,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    Autonomous.stracker=0;
-    Autonomous.first =true;
-    SmartDashboard.putNumber("dP", 0);
-    SmartDashboard.putNumber("position", 0);
-    Autonomous.timerForward.reset();
-    Drive_Train.RightMotor.restoreFactoryDefaults();
-    Drive_Train.LeftMotor.restoreFactoryDefaults();
-    Drive_Train.DriveInit();
-    Intake.Soubway.set(ControlMode.PercentOutput, 0);
-    
-    Drive_Train.RightMotor.setInverted(false);
-    Drive_Train.LeftMotor.setInverted(true);
-    Autonomous.autoTracker = 0;
-    Autonomous.shootTracker = 0;
-    Autonomous.routineTracker = 0;
-    Drive_Train.LeftMotorEncoder.setPosition(0);
-    Drive_Train.RightMotorEncoder.setPosition(0);
-    System.out.println(Drive_Train.RightMotorEncoder.getPosition());
-    Drive_Train.RightMotorEncoder.setPositionConversionFactor(Autonomous.conversionFactor);
-    Drive_Train.LeftMotorEncoder.setPositionConversionFactor(Autonomous.conversionFactor);
-    Autonomous.PFFDriveStraight(0.25, 0, 0);
+    Autonomous.autonInit();
     Autonomous.arctracker = 0;
-    //trap.SetAll(40, 60,60, 55);
   } 
 
   @Override
   public void autonomousPeriodic() {
-    //Autonomous.s_drive(0.2,1);
-    Autonomous.MovePID(2);
-    
-    /**I commented out test stuff for now. No auton functions currently set to run. 
-     * 
-     * Default is OldImprovedAutonPID I believe.
-     * 
-    //Testing robot wheels
-    Drive_Train.LeftMotor.set(0.5);
-    Drive_Train.RightMotor.set(0.5);
-    SmartDashboard.putNumber("SM1V", FinalShooter.ShooterOneEncoder.getVelocity());
-    SmartDashboard.putNumber("SM2V", FinalShooter.ShooterTwoEncoder.getVelocity());
-    // Autonomous.drivefromInit(0.3, 12, 3);
-    System.out.println("ShootTime: " +Autonomous.timerShooter.get());
-    System.out.println("Position: " + trap.Position(Autonomous.timerForward.get()));
-    SmartDashboard.putNumber("LeftDrive Power",Drive_Train.RightMotor.get());
-    SmartDashboard.putNumber("RightDrive POwer", Drive_Train.LeftMotor.get());
-    //Autonomous.ImprovedAutonPID(-trap.Position(Autonomous.timerForward.get()));
-    **/
+    //Autonomous.MovePID(2);
+    Autonomous.learnMode();
 }
 }
 
