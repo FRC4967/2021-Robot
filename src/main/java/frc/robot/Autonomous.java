@@ -26,6 +26,7 @@ public class Autonomous {
                                             * and use ti-tf.
                                             */
     static Timer timerForward = new Timer(); // timer for starting auton shoot routine and trapmove
+    static Timer timerForward2 = new Timer();
     static Timer timerShooter = new Timer();// Timer for shooter function
     boolean auto;
 
@@ -58,7 +59,7 @@ public class Autonomous {
     static double d_OUT;
     static double d_RIGHT;
     static double d_LEFT;
-
+    static double arcRatio;
     static TrapezoidalMove trap = new TrapezoidalMove();
 
     public static void autonInit() {
@@ -241,30 +242,6 @@ public class Autonomous {
 
     }
 
-    public static void MovePID(double position) {
-        // PID movement control for trapezoidal movement.
-        SmartDashboard.putNumber("right pos", Drive_Train.RightMotorEncoder.getPosition());
-        SmartDashboard.putNumber("left pos", Drive_Train.LeftMotorEncoder.getPosition());
-
-        switch (autoTracker) {
-            case 0: // initialize timer.
-                initialPos = Drive_Train.RightMotorEncoder.getPosition();
-                timerForward.stop();
-                timerForward.reset();
-                timerForward.start();
-                trap.SetAll(0.5, 0.5, 0.5, position);
-                autoTracker++;
-                break;
-            // any ideas on what this timer actually does? I don't see it used anywhere.
-            case 1:
-                trap.Position(timerForward.get());
-                PFFDriveStraight(0.25, 0, trap.Position(timerForward.get()));
-                SmartDashboard.putNumber("expected_positon R", trap.Position(timerForward.get()));
-
-        }
-
-    }
-
     public static void ImprovedAutonPID(double position) {
         // NEeds to be tested and calibrated before use.
         SmartDashboard.putNumber("right pos", Math.abs(Drive_Train.RightMotorEncoder.getPosition()));
@@ -392,6 +369,30 @@ public class Autonomous {
         }
     }
 
+    public static void MovePID(double position) {
+        // PID movement control for trapezoidal movement.
+        SmartDashboard.putNumber("right pos", Drive_Train.RightMotorEncoder.getPosition());
+        SmartDashboard.putNumber("left pos", Drive_Train.LeftMotorEncoder.getPosition());
+
+        switch (autoTracker) {
+            case 0: // initialize timer.
+                initialPos = Drive_Train.RightMotorEncoder.getPosition();
+                timerForward.stop();
+                timerForward.reset();
+                timerForward.start();
+                trap.SetAll(0.5, 0.5, 0.5, position);
+                autoTracker++;
+                break;
+            // any ideas on what this timer actually does? I don't see it used anywhere.
+            case 1:
+                trap.Position(timerForward.get());
+                PFFDriveStraight(0.25, 0, trap.Position(timerForward.get()));
+                SmartDashboard.putNumber("expected_positon R", trap.Position(timerForward.get()));
+
+        }
+
+    }
+
     /**
      * 
      * @param radius    - radius traced by center point
@@ -409,14 +410,11 @@ public class Autonomous {
                 Drive_Train.LeftMotorEncoder.setPosition(0);
                 d_IN = calArcLengths(radius, theta)[0];
                 d_OUT = calArcLengths(radius, theta)[1];
+                trap.SetAll(.5, .5, .5, d_OUT);
+                arcRatio = d_IN / d_OUT;
                 // loop to check which wheel will travel shortest distance
-                if (clockwise == true) {
-                    d_RIGHT = d_IN;
-                    d_LEFT = d_OUT;
-                } else {
-                    d_RIGHT = d_OUT;
-                    d_LEFT = d_IN;
-                }
+
+                startTimers();
                 arctracker++;
             case 1:
                 /*
@@ -424,8 +422,21 @@ public class Autonomous {
                  * in inches and using PFFDrive without the conversion parameter. (I made it
                  * optional).
                  */
-                PFFDriveLeft(P, dFF, d_LEFT);
-                PFFDriveRight(P, dFF, d_RIGHT);
+                SmartDashboard.putNumber("right pos", Drive_Train.RightMotorEncoder.getPosition());
+                SmartDashboard.putNumber("left pos", Drive_Train.LeftMotorEncoder.getPosition());
+                SmartDashboard.putNumber("expected_positon R", trap.Position(timerForward.get()));
+                SmartDashboard.putNumber("expected_positon2 R", trap.Position(timerForward.get()) * arcRatio);
+
+                if (clockwise == true) {
+                    PFFDriveRight(P, dFF, trap.Position(timerForward.get()) * arcRatio);
+                    PFFDriveLeft(P, dFF, trap.Position(timerForward.get()));
+
+                } else {
+                    PFFDriveRight(P, dFF, trap.Position(timerForward.get()));
+                    PFFDriveLeft(P, dFF, trap.Position(timerForward.get()) * arcRatio);
+                    ;
+
+                }
                 double travledRight = Drive_Train.RightMotorEncoder.getPosition();
                 double traveledLeft = Drive_Train.LeftMotorEncoder.getPosition();
                 if ((Math.abs(Math.abs(travledRight) - Math.abs(d_RIGHT)) < 0.1)
@@ -436,6 +447,13 @@ public class Autonomous {
                 stopDriving();
 
         }
+
+    }
+
+    public static void startTimers() {
+        timerForward.stop();
+        timerForward.reset();
+        timerForward.start();
 
     }
 

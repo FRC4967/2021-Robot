@@ -2,7 +2,7 @@
  * TrapezoidalMove.h
  *
  *  Created on: Feb 17, 2017
- *      Author: *not* Joey *actually just aidan :)*
+ *      Author: Joey 
  */
 package frc.robot;
 
@@ -34,6 +34,7 @@ class TrapezoidalMove {
         m_distance = Distance;
         // this->CalcParams();
     }
+    
 
     void SetAccel(double value) {
         m_accel = value;
