@@ -476,11 +476,18 @@ public class Autonomous {
             return false;
         }
     }
-
     public static void learnMode() {
         double[] arguments = { Drive_Train.LeftMotorEncoder.getPosition(), Drive_Train.RightMotorEncoder.getPosition(),
                 autonTimer.get() };
         TestOpenFile.writeFile("learn_mode", arguments);
     }
+
+    public static void learnMode(double[] arguments){
+        TestOpenFile.writeFile("learn_mode", arguments);
+    }
+    public static void learnMode(String name, double[] arguments){
+        TestOpenFile.writeFile(name, arguments);
+    }
+
 
 }
