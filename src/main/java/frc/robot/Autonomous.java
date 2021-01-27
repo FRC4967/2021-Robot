@@ -21,6 +21,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Autonomous {
     static double initialPos; // Initial position of robot in auton
+    static Timer autonTimer = new Timer(); /*
+                                            * general auton timer. Eventually, it may be more practical to use one timer
+                                            * and use ti-tf.
+                                            */
     static Timer timerForward = new Timer(); // timer for starting auton shoot routine and trapmove
     static Timer timerForward2 = new Timer();
     static Timer timerShooter = new Timer();// Timer for shooter function
@@ -58,40 +62,44 @@ public class Autonomous {
     static double arcRatio;
     static TrapezoidalMove trap = new TrapezoidalMove();
 
-    // basic "code block" functions to save time repeatedly typing code.
-    public static void autonInit(){
-        //reset trackers and timers and booleans
-        Autonomous.stracker = 0;
-        Autonomous.autoTracker = 0;
-        Autonomous.shootTracker = 0;
-        Autonomous.routineTracker = 0;
-        Autonomous.arctracker = 0;
-        Autonomous.timerForward.reset();
-        Autonomous.first = true;
-        
-        //reset motor values
+    public static void autonInit() {
+        stracker = 0;
+        first = true;
+        SmartDashboard.putNumber("dP", 0);
+        SmartDashboard.putNumber("position", 0);
+        timerForward.reset();
         Drive_Train.RightMotor.restoreFactoryDefaults();
         Drive_Train.LeftMotor.restoreFactoryDefaults();
         Drive_Train.DriveInit();
+        Intake.Soubway.set(ControlMode.PercentOutput, 0);
+
         Drive_Train.RightMotor.setInverted(false);
         Drive_Train.LeftMotor.setInverted(true);
+        autoTracker = 0;
+        shootTracker = 0;
+        routineTracker = 0;
         Drive_Train.LeftMotorEncoder.setPosition(0);
         Drive_Train.RightMotorEncoder.setPosition(0);
+        System.out.println(Drive_Train.RightMotorEncoder.getPosition());
         Drive_Train.RightMotorEncoder.setPositionConversionFactor(Autonomous.conversionFactor);
         Drive_Train.LeftMotorEncoder.setPositionConversionFactor(Autonomous.conversionFactor);
-        
-        //sets motor follows and idle modes
-        Drive_Train.DriveAndrew();
-        Drive_Train.DriveInit();
-        //Prints
-
-        //add to list if needed
+        PFFDriveStraight(0.25, 0, 0);
+        autonTimer.reset();
+        autonTimer.start();
     }
+
+    public static void autonDis() {
+        autonTimer.stop();
+        autonTimer.reset();
+    }
+
+    // basic "code block" functions to save time repeatedly typing code.
     /**
      * 
      * @param speed1 power to left motor
      * @param speed2 power to right motor
      */
+
     public static void autoDrive(double speed1, double speed2) {
         // Basic function that sets wheel speeds in autonomous
         Drive_Train.LeftMotor.set(speed1);
@@ -486,5 +494,18 @@ public class Autonomous {
             return false;
         }
     }
+    public static void learnMode() {
+        double[] arguments = { Drive_Train.LeftMotorEncoder.getPosition(), Drive_Train.RightMotorEncoder.getPosition(),
+                autonTimer.get() };
+        TestOpenFile.writeFile("learn_mode", arguments);
+    }
+
+    public static void learnMode(double[] arguments){
+        TestOpenFile.writeFile("learn_mode", arguments);
+    }
+    public static void learnMode(String name, double[] arguments){
+        TestOpenFile.writeFile(name, arguments);
+    }
+
 
 }
