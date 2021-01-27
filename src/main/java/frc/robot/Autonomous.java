@@ -59,7 +59,34 @@ public class Autonomous {
     static TrapezoidalMove trap = new TrapezoidalMove();
 
     // basic "code block" functions to save time repeatedly typing code.
+    public static void autonInit(){
+        //reset trackers and timers and booleans
+        Autonomous.stracker = 0;
+        Autonomous.autoTracker = 0;
+        Autonomous.shootTracker = 0;
+        Autonomous.routineTracker = 0;
+        Autonomous.arctracker = 0;
+        Autonomous.timerForward.reset();
+        Autonomous.first = true;
+        
+        //reset motor values
+        Drive_Train.RightMotor.restoreFactoryDefaults();
+        Drive_Train.LeftMotor.restoreFactoryDefaults();
+        Drive_Train.DriveInit();
+        Drive_Train.RightMotor.setInverted(false);
+        Drive_Train.LeftMotor.setInverted(true);
+        Drive_Train.LeftMotorEncoder.setPosition(0);
+        Drive_Train.RightMotorEncoder.setPosition(0);
+        Drive_Train.RightMotorEncoder.setPositionConversionFactor(Autonomous.conversionFactor);
+        Drive_Train.LeftMotorEncoder.setPositionConversionFactor(Autonomous.conversionFactor);
+        
+        //sets motor follows and idle modes
+        Drive_Train.DriveAndrew();
+        Drive_Train.DriveInit();
+        //Prints
 
+        //add to list if needed
+    }
     /**
      * 
      * @param speed1 power to left motor
