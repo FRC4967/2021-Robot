@@ -407,18 +407,20 @@ public class Autonomous {
      */
     public static void circlePID(double radius, double theta, double P, double dFF, boolean clockwise) {
         // try this for circle drive
+        SmartDashboard.putNumber("case", arctracker);
         switch (arctracker) {
             case 0:
                 Drive_Train.RightMotorEncoder.setPosition(0);
                 Drive_Train.LeftMotorEncoder.setPosition(0);
                 d_IN = calArcLengths(radius, theta)[0];
                 d_OUT = calArcLengths(radius, theta)[1];
-                trap.SetAll(.1, .1, .5, d_OUT);
+                trap.SetAll(1, 5, 3, d_OUT);
                 arcRatio = d_IN / d_OUT;
                 // loop to check which wheel will travel shortest distance
 
                 startTimers();
                 arctracker++;
+                break;
             case 1:
                 /*
                  * Try changing conversion factor Also, try entering radius, distance, and etc.
@@ -453,8 +455,10 @@ public class Autonomous {
                         || (Math.abs(Math.abs(traveledLeft) - Math.abs(d_LEFT)) < 0.1)) {
                     arctracker++;
                 }
+                break;
             case 2:
                 stopDriving();
+                break;
 
         }
 
