@@ -60,6 +60,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     //start dual camera (OUTDATED. USE LIMELIGHT)
+    
     TestOpenFile.createFile("learn_mode");
     
     FinalShooter.MidRange();
@@ -119,12 +120,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     Autonomous.autonInit();
-    Autonomous.arctracker = 0;
   } 
 
   @Override
   public void autonomousPeriodic() {
+    Autonomous.circlePID(1.5, Math.PI/2, 0.25, 0, false);
     //Autonomous.MovePID(2);
-    Autonomous.learnMode();
+    //Autonomous.learnMode();
 }
 }
