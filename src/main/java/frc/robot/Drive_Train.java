@@ -42,8 +42,11 @@ public class Drive_Train {
     public static void DriveInit() {
         LeftMotor.setIdleMode(IdleMode.kBrake);
         RightMotor.setIdleMode(IdleMode.kBrake);
+        RightFollower.follow(RightMotor);
+        LeftFollower.follow(LeftMotor);
         RightMotor.setInverted(false);
-
+        LeftMotor.setInverted(true);
+        Intake.Soubway.set(ControlMode.PercentOutput, 0);
     }
 
     public static void DriveAndrew() {
@@ -51,6 +54,7 @@ public class Drive_Train {
         RightMotor.setIdleMode(IdleMode.kCoast);
         RightFollower.follow(RightMotor);
         LeftFollower.follow(LeftMotor);
+        RightMotor.setInverted(false);
         LeftMotor.setInverted(true);
         Intake.Soubway.set(ControlMode.PercentOutput, 0);
 

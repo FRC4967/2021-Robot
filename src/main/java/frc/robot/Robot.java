@@ -16,6 +16,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.TimedRobot;
+
 //import edu.wpi.first.networktables.NetworkTableInstance;
 //import edu.wpi.first.wpilibj.vision.VisionRunner;
 //import edu.wpi.first.wpilibj.vision.VisionThread;
@@ -37,32 +38,34 @@ import edu.wpi.first.wpilibj.TimedRobot;
 public class Robot extends TimedRobot {
   int runs;
   public static PWM light = new PWM(0);
-  /*UsbCamera camera1 = new UsbCamera("front?", 1);
-  UsbCamera camera2;*/
+  /*
+   * UsbCamera camera1 = new UsbCamera("front?", 1); UsbCamera camera2;
+   */
   UsbCamera camera1;
   UsbCamera camera2;
-  
+
   boolean circle = false;
   boolean insane = false;
   NetworkTableEntry cameraSelection;
-  //VideoSink server;
+  // VideoSink server;
   boolean ZUC = true;
   boolean buttonimp = false;
   double FF = 0;
-  static double kP =0.000060;
+  static double kP = 0.000060;
   static double kFF = 0.000173;
-//trap and auton stuff
+  // trap and auton stuff
   TrapezoidalMove trap = new TrapezoidalMove();
   Autonomous auto = new Autonomous();
 
   @Override
   public void robotInit() {
     //start dual camera (OUTDATED. USE LIMELIGHT)
+    
     TestOpenFile.createFile("learn_mode");
     
     FinalShooter.MidRange();
     SmartDashboard.putNumber("P", FinalShooter.kP);
-    
+
     SmartDashboard.putNumber("FF", FinalShooter.kFF);
 
   }
@@ -77,13 +80,12 @@ public class Robot extends TimedRobot {
 
     FinalShooter.shuteInit();
     Drive_Train.DriveAndrew();
-    
-    
+
   }
 
   @Override
   public void teleopPeriodic() {
-    //Shooter prints
+    // Shooter prints
     SmartDashboard.putNumber("set top", FinalShooter.topvelocity);
     SmartDashboard.putNumber("set bottom", FinalShooter.bottomvelocity);
 
@@ -92,16 +94,15 @@ public class Robot extends TimedRobot {
     Drive_Train.drive();
     FinalShooter.trauma();
     Climber.Climb();
-    //OUTDATED CAMERA CODE. Delete when updated with LimeLight.
+    // OUTDATED CAMERA CODE. Delete when updated with LimeLight.
     if (OI.Right_Joystick.getRawButtonPressed(7)) {
       System.out.println("Setting camera 2");
       cameraSelection.setString(camera2.getName());
-  } else if (OI.Right_Joystick.getRawButtonReleased(7)) {
+    } else if (OI.Right_Joystick.getRawButtonReleased(7)) {
       System.out.println("Setting camera 1");
       cameraSelection.setString(camera1.getName());
+    }
   }
-  }
-
 
   @Override
   public void disabledInit() {
@@ -119,13 +120,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     Autonomous.autonInit();
-    Autonomous.arctracker = 0;
   } 
 
   @Override
   public void autonomousPeriodic() {
+    Autonomous.circlePID(5, Math.PI/2, 0.25, 0, false);
     //Autonomous.MovePID(2);
-    Autonomous.learnMode();
+    //Autonomous.learnMode();
 }
 }
-

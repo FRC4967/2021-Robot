@@ -63,29 +63,32 @@ public class Autonomous {
     static TrapezoidalMove trap = new TrapezoidalMove();
 
     public static void autonInit() {
-        stracker = 0;
-        first = true;
-        SmartDashboard.putNumber("dP", 0);
-        SmartDashboard.putNumber("position", 0);
-        timerForward.reset();
+        // reset trackers and timers and booleans
+        Autonomous.stracker = 0;
+        Autonomous.autoTracker = 0;
+        Autonomous.shootTracker = 0;
+        Autonomous.routineTracker = 0;
+        Autonomous.arctracker = 0;
+        Autonomous.timerForward.reset();
+        Autonomous.first = true;
+
+        // reset motor values
         Drive_Train.RightMotor.restoreFactoryDefaults();
         Drive_Train.LeftMotor.restoreFactoryDefaults();
         Drive_Train.DriveInit();
-        Intake.Soubway.set(ControlMode.PercentOutput, 0);
-
         Drive_Train.RightMotor.setInverted(false);
         Drive_Train.LeftMotor.setInverted(true);
-        autoTracker = 0;
-        shootTracker = 0;
-        routineTracker = 0;
         Drive_Train.LeftMotorEncoder.setPosition(0);
         Drive_Train.RightMotorEncoder.setPosition(0);
-        System.out.println(Drive_Train.RightMotorEncoder.getPosition());
         Drive_Train.RightMotorEncoder.setPositionConversionFactor(Autonomous.conversionFactor);
         Drive_Train.LeftMotorEncoder.setPositionConversionFactor(Autonomous.conversionFactor);
-        PFFDriveStraight(0.25, 0, 0);
-        autonTimer.reset();
-        autonTimer.start();
+
+        // sets motor follows and idle modes
+        Drive_Train.DriveInit();
+        
+        // Prints
+
+        // add to list if needed
     }
 
     public static void autonDis() {
@@ -195,8 +198,8 @@ public class Autonomous {
      */
     public static double[] calArcLengths(double midR, double theta) {
         // s = rθ
-        double radDiff = Drive_Train.BASE_WIDTH / 12;
-        double[] arkLength = { 2 * Math.PI * (midR - radDiff) * theta, 2 * Math.PI * (midR + radDiff) * theta };
+        double radDiff = Drive_Train.BASE_WIDTH / 24;
+        double[] arkLength = {(midR - radDiff) * theta, (midR + radDiff) * theta };
         return arkLength;
     };
 
@@ -404,34 +407,43 @@ public class Autonomous {
      */
     public static void circlePID(double radius, double theta, double P, double dFF, boolean clockwise) {
         // try this for circle drive
+        SmartDashboard.putNumber("case", arctracker);
         switch (arctracker) {
             case 0:
                 Drive_Train.RightMotorEncoder.setPosition(0);
                 Drive_Train.LeftMotorEncoder.setPosition(0);
                 d_IN = calArcLengths(radius, theta)[0];
                 d_OUT = calArcLengths(radius, theta)[1];
-                trap.SetAll(.5, .5, .5, d_OUT);
+                trap.SetAll(1, 5, 3, d_OUT);
                 arcRatio = d_IN / d_OUT;
                 // loop to check which wheel will travel shortest distance
 
                 startTimers();
                 arctracker++;
+                break;
             case 1:
                 /*
                  * Try changing conversion factor Also, try entering radius, distance, and etc.
                  * in inches and using PFFDrive without the conversion parameter. (I made it
                  * optional).
                  */
+                SmartDashboard.putNumber("arcratio", arcRatio);
+                SmartDashboard.putNumber("in", d_IN);
+                SmartDashboard.putNumber("out", d_OUT);
                 SmartDashboard.putNumber("right pos", Drive_Train.RightMotorEncoder.getPosition());
                 SmartDashboard.putNumber("left pos", Drive_Train.LeftMotorEncoder.getPosition());
                 SmartDashboard.putNumber("expected_positon R", trap.Position(timerForward.get()));
                 SmartDashboard.putNumber("expected_positon2 R", trap.Position(timerForward.get()) * arcRatio);
 
                 if (clockwise == true) {
+                    d_RIGHT = d_IN;
+                    d_LEFT = d_OUT;
                     PFFDriveRight(P, dFF, trap.Position(timerForward.get()) * arcRatio);
                     PFFDriveLeft(P, dFF, trap.Position(timerForward.get()));
 
                 } else {
+                    d_RIGHT = d_OUT;
+                    d_LEFT = d_IN;
                     PFFDriveRight(P, dFF, trap.Position(timerForward.get()));
                     PFFDriveLeft(P, dFF, trap.Position(timerForward.get()) * arcRatio);
                     ;
@@ -443,8 +455,10 @@ public class Autonomous {
                         || (Math.abs(Math.abs(traveledLeft) - Math.abs(d_LEFT)) < 0.1)) {
                     arctracker++;
                 }
+                break;
             case 2:
                 stopDriving();
+                break;
 
         }
 
