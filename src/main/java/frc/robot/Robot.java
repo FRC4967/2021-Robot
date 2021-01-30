@@ -12,6 +12,9 @@ package frc.robot;
 //import edu.wpi.first.wpilibj.I2C;
 //import java.util.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PWM;
@@ -120,12 +123,15 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     Autonomous.autonInit();
+    Drive_Train.RightMotor.setIdleMode(IdleMode.kCoast);
+    Drive_Train.LeftMotor.setIdleMode(IdleMode.kCoast);
+    Autonomous.timerForward.start();
   } 
 
   @Override
   public void autonomousPeriodic() {
-    Autonomous.circlePID(5, Math.PI/2, 0.25, 0, false);
+    //Autonomous.circlePID(3, Math.PI/2, 0.25, 0, false);
     //Autonomous.MovePID(2);
-    //Autonomous.learnMode();
+    Autonomous.learnMode();
 }
 }

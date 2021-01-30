@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.util.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter; // Import the FileWriter class
@@ -16,7 +17,7 @@ public class TestOpenFile {
    */
   public static void createFile(String name) {
     try {
-      String fileDir = "/media/sda1/" + name + ".csv"; // creates directory for fie with specified name
+      String fileDir = "/media/sda1/test.csv"; // creates directory for fie with specified name
       File myObj = new File(fileDir);
       if (myObj.createNewFile()) {
         // creates file if new
@@ -28,23 +29,40 @@ public class TestOpenFile {
       System.out.println("An error occurred.");
       e.printStackTrace();
     }
-  }
-
-  /**
-   * 
-   * @param arguments - array of items you want added.
-   */
-  public static void writeFile(String name, double[] arguments) {
     try {
-      String fileDir = "/media/sda1/" + name + ".csv";
+      String fileDir = "/media/sda1/test.csv";
       FileWriter myWriter = new FileWriter(fileDir);
-      myWriter.write(arguments.toString()); // writer does not accept doubles, so I converted the arguments to a string.
       myWriter.close();
       System.out.println("Successfully wrote to the file.");
     } catch (IOException e) {
       System.out.println("An error occurred.");
       e.printStackTrace();
     }
+  }
+
+  /**
+   * 
+   * @param arguments - array of items you want added.
+   */
+  public static void writeFile(String name, double [] arguments) {
+    try {
+      String fileDir = "/media/sda1/test.csv";
+      
+      FileWriter myWriter = new FileWriter(fileDir, true);
+      for (double j: arguments){
+        String i = String.valueOf(j);
+        myWriter.write(i); // writer does not accept doubles, so I converted the arguments to a string.
+        myWriter.write(",");
+        System.out.println(i);
+
+      }
+      myWriter.close();
+      System.out.println("Successfully wrote to the file.");
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+    
 
   }
 }

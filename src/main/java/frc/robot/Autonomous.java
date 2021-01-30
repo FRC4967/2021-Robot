@@ -11,6 +11,7 @@ Why: IDK
 */
 package frc.robot;
 
+import java.io.*;
 import java.lang.Math;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.ControlType;
@@ -391,10 +392,11 @@ public class Autonomous {
                 trap.Position(timerForward.get());
                 PFFDriveStraight(0.25, 0, trap.Position(timerForward.get()));
                 SmartDashboard.putNumber("expected_positon R", trap.Position(timerForward.get()));
-
         }
 
     }
+
+    
 
     /**
      * 
@@ -511,7 +513,7 @@ public class Autonomous {
     public static void learnMode() {
         double[] arguments = { Drive_Train.LeftMotorEncoder.getPosition(), Drive_Train.RightMotorEncoder.getPosition(),
                 autonTimer.get() };
-        TestOpenFile.writeFile("learn_mode", arguments);
+        TestOpenFile.writeFile("test", arguments);
     }
 
     public static void learnMode(double[] arguments){
@@ -520,6 +522,13 @@ public class Autonomous {
     public static void learnMode(String name, double[] arguments){
         TestOpenFile.writeFile(name, arguments);
     }
+
+    public static void learnRun (String name){
+
+        
+    }
+
+    
 
 
 }
