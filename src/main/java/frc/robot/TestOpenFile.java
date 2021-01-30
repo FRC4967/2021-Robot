@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import java.util.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter; // Import the FileWriter class
