@@ -130,7 +130,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    //Autonomous.circlePID(3, Math.PI/2, 0.25, 0, false);
+    //Autonomous.circlePID(3, Math.PI/2, 0.25, 0, false, true);
     //Autonomous.MovePID(2);
     //Autonomous.learnMode();
     Autonomous.chainFunction();

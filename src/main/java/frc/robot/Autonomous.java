@@ -199,8 +199,7 @@ public class Autonomous {
     public static double[] calArcLengths(double midR, double theta) {
         // s = rθ
         double radDiff = Drive_Train.BASE_WIDTH / 24;
-        double negativeCheck = midR/Math.abs(midR);
-        double[] arkLength = { (Math.abs(midR) - radDiff) * theta*negativeCheck, (Math.abs(midR) + radDiff) * theta * negativeCheck };
+        double[] arkLength = { (midR - radDiff) * theta, (midR + radDiff) * theta  };
         return arkLength;
     };
 
@@ -416,17 +415,26 @@ public class Autonomous {
      *                  values
      * @param clockwise - checks direction we want robot to rotate in.
      */
-    public static void circlePID(double radius, double theta, double P, double dFF, boolean clockwise) {
+    public static void circlePID(double radius, double theta, double P, double dFF, boolean clockwise, Boolean backwards) {
         // try this for circle drive
         SmartDashboard.putNumber("case", arctracker);
+        int negativeCheck = 0;
+        
         switch (arctracker) {
             case 0:
+                if (backwards == true) {
+                    negativeCheck = -1;
+                    clockwise = !clockwise;
+                } else {
+                    negativeCheck = 1;
+                }
+                timerForward.stop();
                 Drive_Train.RightMotorEncoder.setPosition(0);
                 Drive_Train.LeftMotorEncoder.setPosition(0);
                 d_IN = calArcLengths(radius, theta)[0];
                 d_OUT = calArcLengths(radius, theta)[1];
                 startTimers();
-                trap.SetAll(1, 5, 3, d_OUT);
+                trap.SetAll(5 * negativeCheck, 5 * negativeCheck, 5 * negativeCheck, d_OUT);
                 arcRatio = d_IN / d_OUT;
                 // loop to check which wheel will travel shortest distance
 
@@ -548,7 +556,7 @@ public class Autonomous {
                 break;
             case 1:
                 autoTracker = 0;
-                circlePID(3, Math.PI / 2, 0.25, 0, true);
+                circlePID(3, Math.PI / 2, 0.25, 0, true, false);
                 if (arctracker == 2) {
                     chainTracker++;
                 }
@@ -559,7 +567,7 @@ public class Autonomous {
                 chainTracker++;
                 break;
             case 3:
-                circlePID(-3, Math.PI / 2, 0.25, 0, true);
+                circlePID(3, Math.PI / 2, 0.25, 0, true, true);
 
                 if (arctracker == 2) {
                     chainTracker++;
