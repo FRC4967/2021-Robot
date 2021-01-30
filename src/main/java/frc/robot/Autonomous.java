@@ -392,9 +392,17 @@ public class Autonomous {
                 trap.Position(timerForward.get());
                 PFFDriveStraight(0.25, 0, trap.Position(timerForward.get()));
                 SmartDashboard.putNumber("expected_positon R", trap.Position(timerForward.get()));
+                if (((Math.abs(Drive_Train.RightMotorEncoder.getPosition()-position))<0.05) ||
+                (Math.abs(Drive_Train.LeftMotorEncoder.getPosition()-position)<0.05)){
+                    autoTracker++;
+                }
+                break;
         }
+        
 
     }
+    
+
 
     
 
@@ -460,11 +468,21 @@ public class Autonomous {
                 break;
             case 2:
                 stopDriving();
+                autoTracker++;
                 break;
 
         }
 
     }
+    /*public static void moveCase(){
+        switch(autoTracker) {
+            case 0:
+                MovePID(2.5);
+            case 1:
+                circlePID(3,Math.PI/2,0,0.25);
+
+        }
+    }*/
 
     public static void startTimers() {
         timerForward.stop();
