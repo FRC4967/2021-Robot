@@ -11,7 +11,6 @@ Why: IDK
 */
 package frc.robot;
 
-import java.io.*;
 import java.lang.Math;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.ControlType;
@@ -86,7 +85,7 @@ public class Autonomous {
 
         // sets motor follows and idle modes
         Drive_Train.DriveInit();
-        
+
         // Prints
 
         // add to list if needed
@@ -200,7 +199,7 @@ public class Autonomous {
     public static double[] calArcLengths(double midR, double theta) {
         // s = rθ
         double radDiff = Drive_Train.BASE_WIDTH / 24;
-        double[] arkLength = {(midR - radDiff) * theta, (midR + radDiff) * theta };
+        double[] arkLength = { (midR - radDiff) * theta, (midR + radDiff) * theta };
         return arkLength;
     };
 
@@ -396,8 +395,6 @@ public class Autonomous {
 
     }
 
-    
-
     /**
      * 
      * @param radius    - radius traced by center point
@@ -510,25 +507,19 @@ public class Autonomous {
             return false;
         }
     }
+
     public static void learnMode() {
         double[] arguments = { Drive_Train.LeftMotorEncoder.getPosition(), Drive_Train.RightMotorEncoder.getPosition(),
                 autonTimer.get() };
         TestOpenFile.writeFile("test", arguments);
     }
 
-    public static void learnMode(double[] arguments){
+    public static void learnMode(double[] arguments) {
         TestOpenFile.writeFile("learn_mode", arguments);
     }
-    public static void learnMode(String name, double[] arguments){
+
+    public static void learnMode(String name, double[] arguments) {
         TestOpenFile.writeFile(name, arguments);
     }
-
-    public static void learnRun (String name){
-
-        
-    }
-
-    
-
 
 }

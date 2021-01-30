@@ -31,10 +31,10 @@ public class Drive_Train {
     public static CANSparkMax LeftFollower = new CANSparkMax(RobotMap.LEFT_FOLLOWER_ID, MotorType.kBrushless);
     public static CANSparkMax RightMotor = new CANSparkMax(RobotMap.RIGHT_MOTOR_ID, MotorType.kBrushless);
     public static CANSparkMax RightFollower = new CANSparkMax(RobotMap.RIGHT_FOLLOWER_ID, MotorType.kBrushless);
-    public static CANEncoder RightMotorEncoder = new CANEncoder(RightMotor);
-    public static CANEncoder LeftMotorEncoder = new CANEncoder(LeftMotor);
-    public static CANPIDController rightDrivePID = new CANPIDController(RightMotor);
-    public static CANPIDController leftDrivePID = new CANPIDController(LeftMotor);
+    public static CANEncoder RightMotorEncoder = RightMotor.getEncoder();
+    public static CANEncoder LeftMotorEncoder = LeftMotor.getEncoder();
+    public static CANPIDController rightDrivePID = RightMotor.getPIDController();
+    public static CANPIDController leftDrivePID = LeftMotor.getPIDController();
     public static ControlType kVelocity;
 
     public static double BASE_WIDTH = 26; //inches
