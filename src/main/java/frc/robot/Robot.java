@@ -123,15 +123,19 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     //FileLogger.createFile("learn_mode");
     Autonomous.autonInit();
-    Drive_Train.RightMotor.setIdleMode(IdleMode.kCoast);
-    Drive_Train.LeftMotor.setIdleMode(IdleMode.kCoast);
-    Autonomous.timerForward.start();
+    //Drive_Train.RightMotor.setIdleMode(IdleMode.kCoast);
+    //Drive_Train.LeftMotor.setIdleMode(IdleMode.kCoast);
+    //Autonomous.timerForward.start();
   } 
 
   @Override
   public void autonomousPeriodic() {
-    //Autonomous.circlePID(3, Math.PI/2, 0.25, 0, false);
+    //Autonomous.circlePID(3, Math.PI/2, 0.25, 0, false, true);
     //Autonomous.MovePID(2);
     //Autonomous.learnMode();
+<<<<<<< HEAD
+=======
+    Autonomous.chainFunction();
+>>>>>>> fb7752539200a2a52bb985f08549d9594ca5ba14
 }
 }

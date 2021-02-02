@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class FinalShooter {
     public static CANSparkMax ShooterMotorTop = new CANSparkMax(RobotMap.SHOOTER_MOTOR_TOP_ID, MotorType.kBrushless);
     public static CANSparkMax ShooterMotorBottom = new CANSparkMax(RobotMap.SHOOTER_MOTOR_BOTTOM_ID, MotorType.kBrushless);
-    public static CANEncoder ShooterOneEncoder = new CANEncoder(ShooterMotorBottom);
-    public static CANEncoder ShooterTwoEncoder = new CANEncoder(ShooterMotorTop);
+    public static CANEncoder ShooterOneEncoder = ShooterMotorBottom.getEncoder();
+    public static CANEncoder ShooterTwoEncoder = ShooterMotorTop.getEncoder();
     public static double topvelocity = 3500;
     public static double bottomvelocity = 5500;
 
