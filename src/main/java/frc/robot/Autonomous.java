@@ -570,7 +570,8 @@ public class Autonomous {
                 }
                 break;
             case 1:
-                Interpolator.calcPositions((float) autonTimer.get());
+                PFFDriveRight(0.25,0,Interpolator.calcPositions((float) autonTimer.get())[0]);
+                PFFDriveRight(0.25,0,Interpolator.calcPositions((float) autonTimer.get())[1]);
 
         }
     }
