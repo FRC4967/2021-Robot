@@ -17,6 +17,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.Scanner;
 //import edu.wpi.first.wpilibj.AnalogInput;
 //import edu.wpi.first.wpilibj.Encoder;
 
@@ -38,7 +39,12 @@ public class Autonomous {
     static int spinTracker = 0;
     static int stracker = 0;
     static int arctracker = 0;
+    static int fileTracker = 0;
+
     // more variables
+    static int lineNum = 0;
+    static double[] rightPos;
+    static double[] leftPos;
     static final double trapPositon = 65;
     boolean timerForwardStarted = false;
     static double wheelfactor = 6 * Math.PI;
@@ -62,6 +68,7 @@ public class Autonomous {
     static double d_LEFT;
     static double arcRatio;
     static TrapezoidalMove trap = new TrapezoidalMove();
+    static PathInterpolator Interpolator = new PathInterpolator();
 
     public static void autonInit() {
         // reset trackers and timers and booleans
@@ -86,7 +93,7 @@ public class Autonomous {
 
         // sets motor follows and idle modes
         Drive_Train.DriveInit();
-        
+
         // Prints
 
         // add to list if needed
@@ -200,7 +207,7 @@ public class Autonomous {
     public static double[] calArcLengths(double midR, double theta) {
         // s = rθ
         double radDiff = Drive_Train.BASE_WIDTH / 24;
-        double[] arkLength = {(midR - radDiff) * theta, (midR + radDiff) * theta };
+        double[] arkLength = { (midR - radDiff) * theta, (midR + radDiff) * theta };
         return arkLength;
     };
 
@@ -392,19 +399,14 @@ public class Autonomous {
                 trap.Position(timerForward.get());
                 PFFDriveStraight(0.25, 0, trap.Position(timerForward.get()));
                 SmartDashboard.putNumber("expected_positon R", trap.Position(timerForward.get()));
-                if (((Math.abs(Drive_Train.RightMotorEncoder.getPosition()-position))<0.05) ||
-                (Math.abs(Drive_Train.LeftMotorEncoder.getPosition()-position)<0.05)){
+                if (((Math.abs(Drive_Train.RightMotorEncoder.getPosition() - position)) < 0.05)
+                        || (Math.abs(Drive_Train.LeftMotorEncoder.getPosition() - position) < 0.05)) {
                     autoTracker++;
                 }
                 break;
         }
-        
 
     }
-    
-
-
-    
 
     /**
      * 
@@ -474,15 +476,12 @@ public class Autonomous {
         }
 
     }
-    /*public static void moveCase(){
-        switch(autoTracker) {
-            case 0:
-                MovePID(2.5);
-            case 1:
-                circlePID(3,Math.PI/2,0,0.25);
-
-        }
-    }*/
+    /*
+     * public static void moveCase(){ switch(autoTracker) { case 0: MovePID(2.5);
+     * case 1: circlePID(3,Math.PI/2,0,0.25);
+     * 
+     * } }
+     */
 
     public static void startTimers() {
         timerForward.stop();
@@ -528,25 +527,38 @@ public class Autonomous {
             return false;
         }
     }
+
     public static void learnMode() {
         double[] arguments = { Drive_Train.LeftMotorEncoder.getPosition(), Drive_Train.RightMotorEncoder.getPosition(),
-                autonTimer.get() };
-        TestOpenFile.writeFile("test", arguments);
+                timerForward.get() };
+        FileLogger.writeFile("test", arguments);
     }
 
-    public static void learnMode(double[] arguments){
-        TestOpenFile.writeFile("learn_mode", arguments);
-    }
-    public static void learnMode(String name, double[] arguments){
-        TestOpenFile.writeFile(name, arguments);
+    public static void learnMode(double[] arguments) {
+        FileLogger.writeFile("learn_mode", arguments);
     }
 
-    public static void learnRun (String name){
-
-        
+    public static void learnMode(String name, double[] arguments) {
+        FileLogger.writeFile(name, arguments);
     }
 
-    
+    public static void exampleAuton(String someFile) throws Exception {
+        // Untested, general idea of how the code is probably supposed to run.
+        switch (autoTracker) {
+            case 0:
+                if (Interpolator.sequencer < 1) {
+                    Interpolator.setAll(someFile);
+                } else {
+                    autonTimer.stop();
+                    autonTimer.reset();
+                    autonTimer.start();
+                    autoTracker++;
+                }
+                break;
+            case 1:
+                Interpolator.calcPositions((float) autonTimer.get());
 
+        }
 
+    }
 }

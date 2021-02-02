@@ -64,7 +64,6 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     //start dual camera (OUTDATED. USE LIMELIGHT)
     
-    TestOpenFile.createFile("learn_mode");
     
     FinalShooter.MidRange();
     SmartDashboard.putNumber("P", FinalShooter.kP);
@@ -122,6 +121,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    //FileLogger.createFile("learn_mode");
     Autonomous.autonInit();
     Drive_Train.RightMotor.setIdleMode(IdleMode.kCoast);
     Drive_Train.LeftMotor.setIdleMode(IdleMode.kCoast);
@@ -132,6 +132,6 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     //Autonomous.circlePID(3, Math.PI/2, 0.25, 0, false);
     //Autonomous.MovePID(2);
-    Autonomous.learnMode();
+    //Autonomous.learnMode();
 }
 }
