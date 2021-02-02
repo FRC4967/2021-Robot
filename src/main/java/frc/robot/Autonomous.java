@@ -40,12 +40,9 @@ public class Autonomous {
     static int spinTracker = 0;
     static int stracker = 0;
     static int arctracker = 0;
-<<<<<<< HEAD
     static int fileTracker = 0;
 
-=======
     static int chainTracker = 0;
->>>>>>> fb7752539200a2a52bb985f08549d9594ca5ba14
     // more variables
     static int lineNum = 0;
     static double[] rightPos;
@@ -209,11 +206,7 @@ public class Autonomous {
     public static double[] calArcLengths(double midR, double theta) {
         // s = rθ
         double radDiff = Drive_Train.BASE_WIDTH / 24;
-<<<<<<< HEAD
-        double[] arkLength = { (midR - radDiff) * theta, (midR + radDiff) * theta };
-=======
         double[] arkLength = { (midR - radDiff) * theta, (midR + radDiff) * theta  };
->>>>>>> fb7752539200a2a52bb985f08549d9594ca5ba14
         return arkLength;
     };
 
@@ -407,13 +400,6 @@ public class Autonomous {
                 trap.Position(timerForward.get());
                 PFFDriveStraight(0.25, 0, trap.Position(timerForward.get()));
                 SmartDashboard.putNumber("expected_positon R", trap.Position(timerForward.get()));
-<<<<<<< HEAD
-                if (((Math.abs(Drive_Train.RightMotorEncoder.getPosition() - position)) < 0.05)
-                        || (Math.abs(Drive_Train.LeftMotorEncoder.getPosition() - position) < 0.05)) {
-                    autoTracker++;
-                }
-                break;
-=======
                 if (position - Drive_Train.RightMotorEncoder.getPosition() <= .06
                         || position - Drive_Train.LeftMotorEncoder.getPosition() <= .06) {
                     stopDriving();
@@ -423,7 +409,6 @@ public class Autonomous {
             case 2:
             chainTracker++;
                 break;
->>>>>>> fb7752539200a2a52bb985f08549d9594ca5ba14
         }
 
     }
@@ -564,7 +549,6 @@ public class Autonomous {
     }
 
     public static void learnMode(double[] arguments) {
-<<<<<<< HEAD
         FileLogger.writeFile("learn_mode", arguments);
     }
 
@@ -589,13 +573,8 @@ public class Autonomous {
                 Interpolator.calcPositions((float) autonTimer.get());
 
         }
-=======
-        TestOpenFile.writeFile("learn_mode", arguments);
     }
 
-    public static void learnMode(String name, double[] arguments) {
-        TestOpenFile.writeFile(name, arguments);
-    }
 
     public static void chainFunction() {
         Drive_Train.LeftMotor.setIdleMode(IdleMode.kBrake);
@@ -644,7 +623,5 @@ public class Autonomous {
         }
 
     }
->>>>>>> fb7752539200a2a52bb985f08549d9594ca5ba14
 
     }
-}

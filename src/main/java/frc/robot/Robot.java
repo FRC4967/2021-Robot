@@ -133,9 +133,6 @@ public class Robot extends TimedRobot {
     //Autonomous.circlePID(3, Math.PI/2, 0.25, 0, false, true);
     //Autonomous.MovePID(2);
     //Autonomous.learnMode();
-<<<<<<< HEAD
-=======
     Autonomous.chainFunction();
->>>>>>> fb7752539200a2a52bb985f08549d9594ca5ba14
 }
 }
