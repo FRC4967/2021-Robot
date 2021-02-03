@@ -206,7 +206,7 @@ public class Autonomous {
     public static double[] calArcLengths(double midR, double theta) {
         // s = rθ
         double radDiff = Drive_Train.BASE_WIDTH / 24;
-        double[] arkLength = { (midR - radDiff) * theta, (midR + radDiff) * theta  };
+        double[] arkLength = { (midR - radDiff) * theta, (midR + radDiff) * theta };
         return arkLength;
     };
 
@@ -290,7 +290,7 @@ public class Autonomous {
                 // System.out.println("Timer Forward: " + timerForward.get());
                 // 5PIDShooter(Robot.kP, 0, 0, Robot.kFF, RobotMap.topvelocity,
                 // RobotMap.bottomvelocity);
-                straightDrive(position);
+                straightDrive(position, 1);
                 if (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) > 49
                         && Math.abs(Drive_Train.LeftMotorEncoder.getPosition()) > 49) {
 
@@ -329,7 +329,7 @@ public class Autonomous {
                 // System.out.println("Timer Forward: " + timerForward.get());
                 // 5PIDShooter(Robot.kP, 0, 0, Robot.kFF, RobotMap.topvelocity,
                 // RobotMap.bottomvelocity);
-                straightDrive(position);
+                straightDrive(position, 1);
                 if (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) > 49
                         && Math.abs(Drive_Train.LeftMotorEncoder.getPosition()) > 49) {
 
@@ -379,20 +379,21 @@ public class Autonomous {
         }
     }
 
-    public static void straightDrive(double position) {
+    public static void straightDrive(double position, int negative) {
         // PID movement control for trapezoidal movement.
         SmartDashboard.putNumber("right pos", Drive_Train.RightMotorEncoder.getPosition());
         SmartDashboard.putNumber("left pos", Drive_Train.LeftMotorEncoder.getPosition());
 
         switch (autoTracker) {
             case 0: // initialize timer.
+                timerForward.stop();
                 Drive_Train.RightMotorEncoder.setPosition(0);
                 Drive_Train.LeftMotorEncoder.setPosition(0);
                 initialPos = Drive_Train.RightMotorEncoder.getPosition();
-                timerForward.stop();
+                trap.SetAll(0.2 * negative, 1 * negative, 0.5 * negative, position * negative);
                 timerForward.reset();
                 timerForward.start();
-                trap.SetAll(0.2, 1, 0.5, position);
+                System.out.println("case switch straight");
                 autoTracker++;
                 break;
             // any ideas on what this timer actually does? I don't see it used anywhere.
@@ -403,11 +404,14 @@ public class Autonomous {
                 if (position - Drive_Train.RightMotorEncoder.getPosition() <= .06
                         || position - Drive_Train.LeftMotorEncoder.getPosition() <= .06) {
                     stopDriving();
+                    System.out.println("case switch straight");
                     autoTracker++;
                 }
                 break;
             case 2:
-            chainTracker++;
+                System.out.println("case switch chain");
+
+                chainTracker++;
                 break;
         }
 
@@ -422,11 +426,12 @@ public class Autonomous {
      *                  values
      * @param clockwise - checks direction we want robot to rotate in.
      */
-    public static void circlePID(double radius, double theta, double P, double dFF, boolean clockwise, Boolean backwards) {
+    public static void circlePID(double radius, double theta, double P, double dFF, boolean clockwise,
+            Boolean backwards) {
         // try this for circle drive
         SmartDashboard.putNumber("case", arctracker);
         int negativeCheck = 0;
-        
+
         switch (arctracker) {
             case 0:
                 if (backwards == true) {
@@ -441,10 +446,10 @@ public class Autonomous {
                 d_IN = calArcLengths(radius, theta)[0];
                 d_OUT = calArcLengths(radius, theta)[1];
                 startTimers();
-                trap.SetAll(5 * negativeCheck, 5 * negativeCheck, 5 * negativeCheck, d_OUT);
+                trap.SetAll(3 * negativeCheck, 3 * negativeCheck, 3 * negativeCheck, d_OUT * negativeCheck);
                 arcRatio = d_IN / d_OUT;
                 // loop to check which wheel will travel shortest distance
-
+                System.out.println("case switch arc");
                 arctracker++;
                 break;
             case 1:
@@ -477,14 +482,14 @@ public class Autonomous {
                 }
                 double travledRight = Drive_Train.RightMotorEncoder.getPosition();
                 double traveledLeft = Drive_Train.LeftMotorEncoder.getPosition();
-                if ((Math.abs(Math.abs(d_RIGHT) - Math.abs(travledRight) ) < 0.1)
-                        || (Math.abs(Math.abs(d_LEFT) - Math.abs(traveledLeft) ) < 0.1)) {
+                if ((Math.abs(Math.abs(d_RIGHT) - Math.abs(travledRight)) < 0.06)
+                        || (Math.abs(Math.abs(d_LEFT) - Math.abs(traveledLeft)) < 0.06)) {
+                    System.out.println("case switch arc");
                     arctracker++;
                 }
                 break;
             case 2:
                 stopDriving();
-                autoTracker++;
                 break;
 
         }
@@ -570,12 +575,11 @@ public class Autonomous {
                 }
                 break;
             case 1:
-                PFFDriveRight(0.25,0,Interpolator.calcPositions((float) autonTimer.get())[0]);
-                PFFDriveRight(0.25,0,Interpolator.calcPositions((float) autonTimer.get())[1]);
+                PFFDriveRight(0.25, 0, Interpolator.calcPositions((float) autonTimer.get())[0]);
+                PFFDriveRight(0.25, 0, Interpolator.calcPositions((float) autonTimer.get())[1]);
 
         }
     }
-
 
     public static void chainFunction() {
         Drive_Train.LeftMotor.setIdleMode(IdleMode.kBrake);
@@ -584,38 +588,46 @@ public class Autonomous {
         SmartDashboard.putNumber("straight", autoTracker);
         switch (chainTracker) {
             case 0:
-                straightDrive(2);
-                /*if (autoTracker == 3) {
-                    chainTracker++;
-                }*/
+                straightDrive(2, 1);
+                /*
+                 * if (autoTracker == 3) { chainTracker++; }
+                 */
+
                 break;
             case 1:
                 autoTracker = 0;
-                circlePID(3, Math.PI / 2, 0.25, 0, true, false);
-                if (arctracker == 2) {
+                circlePID(2, Math.PI / 2, 0.25, 0, true, false);
+                if (arctracker == 2 && Drive_Train.RightMotorEncoder.getVelocity() == 0) {
+                    System.out.println("case switch chain");
                     chainTracker++;
                 }
                 break;
-                case 2:
+            case 2:
                 arctracker = 0;
+                if (Drive_Train.RightMotorEncoder.getVelocity() == 0) {
+                    System.out.println("case switch chain");
 
-                chainTracker++;
+                    chainTracker++;
+                }
+
                 break;
             case 3:
-                circlePID(3, Math.PI / 2, 0.25, 0, true, true);
+                circlePID(2, Math.PI / 2, 0.25, 0, true, true);
 
-                if (arctracker == 2) {
+                if (arctracker == 2 && Drive_Train.RightMotorEncoder.getVelocity() == 0) {
+                    autoTracker = 0;
+                    System.out.println("case switch chain");
+
                     chainTracker++;
                 }
                 break;
-                
+
             case 4:
                 arctracker = 0;
-                straightDrive(-2);
+                straightDrive(2, -1);
                 /*
-                if (autoTracker == 3) {
-                    chainTracker++;
-                }*/
+                 * if (autoTracker == 3) { chainTracker++; }
+                 */
                 break;
 
             case 5:
@@ -625,4 +637,4 @@ public class Autonomous {
 
     }
 
-    }
+}
