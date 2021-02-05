@@ -39,7 +39,7 @@ public class FileLogger {
     try {
       String fileDir = "/media/sda1/test.csv";
       FileWriter myWriter = new FileWriter(fileDir);
-      myWriter.write("leftEncoder,rightEncoder,\n");
+      myWriter.write("leftEncoder,rightEncoder," + "\n");
       myWriter.close();
       System.out.println("Successfully wrote to the file.");
     } catch (IOException e) {
@@ -59,23 +59,60 @@ public class FileLogger {
         fileCounter++;
         break;
       case 1:
-        Timer.delay(0.10);
         try {
           String fileDir = "/media/sda1/test.csv";
-
           FileWriter myWriter = new FileWriter(fileDir, true);
           for (double j : arguments) {
-            line += j + ",";
-            System.out.println(line);
-
+            String i = String.valueOf(j);
+            myWriter.write(i); // writer does not accept doubles, so I converted the arguments to a string.
+            myWriter.write(",");
+            System.out.println(i);
           }
+
           myWriter.write("\n");
+          System.out.println("line break");
           myWriter.close();
           System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
           System.out.println("An error occurred.");
           e.printStackTrace();
         }
+    }
+  }
+  /*
+   * public static void writeFile(String name, double[] arguments) { try { String
+   * fileDir = "/media/sda1/test.csv";
+   * 
+   * FileWriter myWriter = new FileWriter(fileDir, true); for (double j :
+   * arguments) { String i = String.valueOf(j); myWriter.write(i); // writer does
+   * not accept doubles, so I converted the arguments to a string.
+   * myWriter.write(","); System.out.println(i);
+   * 
+   * } myWriter.write("\n"); myWriter.close();
+   * System.out.println("Successfully wrote to the file."); } catch (IOException
+   * e) { System.out.println("An error occurred."); e.printStackTrace(); }
+   * 
+   * }
+   */
+
+  public static void writeFilez(String name, double[] arguments) {
+    try {
+      String fileDir = "/media/sda1/test.csv";
+
+      FileWriter myWriter = new FileWriter(fileDir, true);
+      for (double j : arguments) {
+        String i = String.valueOf(j);
+        myWriter.write(i); // writer does not accept doubles, so I converted the arguments to a string.
+        myWriter.write(",");
+        System.out.println(i);
+
+      }
+      myWriter.write("\n");
+      myWriter.close();
+      System.out.println("Successfully wrote to the file.");
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
     }
 
   }
