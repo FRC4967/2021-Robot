@@ -62,9 +62,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    //start dual camera (OUTDATED. USE LIMELIGHT)
-    
-    
+    // start dual camera (OUTDATED. USE LIMELIGHT)
+
     FinalShooter.MidRange();
     SmartDashboard.putNumber("P", FinalShooter.kP);
 
@@ -108,7 +107,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    //resets
+    // resets
     Autonomous.autonDis();
     Drive_Train.RobotDis();
     Intake.intakeDis();
@@ -121,22 +120,29 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    FileLogger.createFile("learn_mode");
-    Drive_Train.LeftMotorEncoder.setPosition(0);
-    Drive_Train.RightMotorEncoder.setPosition(0);
-    //Autonomous.autonInit();      !!!!!!
-    //Drive_Train.RightMotor.setIdleMode(IdleMode.kCoast);
-    //Drive_Train.LeftMotor.setIdleMode(IdleMode.kCoast);
-    //Autonomous.timerForward.start();
-  } 
+    //FileLogger.createFile("learn_mode");
+   // Drive_Train.LeftMotorEncoder.setPosition(0);
+    //Drive_Train.RightMotorEncoder.setPosition(0);
+    Autonomous.autonInit();
+    
+    // Drive_Train.RightMotor.setIdleMode(IdleMode.kCoast);
+    // Drive_Train.LeftMotor.setIdleMode(IdleMode.kCoast);
+    // Autonomous.timerForward.start();
+  }
 
   @Override
   public void autonomousPeriodic() {
-    Drive_Train.RightMotor.setIdleMode(IdleMode.kCoast);
-    Drive_Train.LeftMotor.setIdleMode(IdleMode.kCoast);
+    try {
+      Autonomous.exampleAuton("D:\\test.csv");
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    //Drive_Train.RightMotor.setIdleMode(IdleMode.kCoast);
+    //Drive_Train.LeftMotor.setIdleMode(IdleMode.kCoast);
     //Autonomous.circlePID(3, Math.PI/2, 0.25, 0, false, true);
     //Autonomous.MovePID(2);
-    Autonomous.learnMode();
+    //Autonomous.learnMode();
     //Autonomous.chainFunction();
 }
 }
