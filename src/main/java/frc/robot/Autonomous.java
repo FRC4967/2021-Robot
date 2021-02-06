@@ -106,7 +106,6 @@ public class Autonomous {
         // Prints
 
         // add to list if needed
-        FileLogger.sc = null;
         PathInterpolator.raw_l.clear();
         PathInterpolator.raw_r.clear();
         PathInterpolator.raw_t.clear();
