@@ -1,5 +1,6 @@
 package frc.robot;
 
+import java.io.Closeable;
 import java.lang.Math;
 import java.util.*;
 
@@ -39,7 +40,7 @@ public class PathInterpolator {
 
     static int sequencer = 0;
 
-    public void setAll(String fileName) {
+    public void setAll(String fileName) { 
         FileLogger.scanToList(fileName, raw_r, 0);
         FileLogger.scanToList(fileName, raw_l, 1);
         FileLogger.scanToList(fileName, raw_t, 2);

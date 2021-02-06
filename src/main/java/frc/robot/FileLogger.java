@@ -8,7 +8,9 @@ import java.util.*;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.wpilibj.Timer;
+import java.io.Closeable;
+
+//import edu.wpi.first.wpilibj.Timer;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +21,7 @@ public class FileLogger {
 
   static int fileCounter;
   static String line = "";
+  static Scanner sc = null; // creates scanner
 
   /**
    * 
@@ -50,7 +53,6 @@ public class FileLogger {
     }
     Drive_Train.LeftMotor.setIdleMode(IdleMode.kCoast);
     Drive_Train.LeftMotor.setIdleMode(IdleMode.kBrake);
-
 
   }
 
@@ -125,18 +127,22 @@ public class FileLogger {
 
   public static void scanToList(String file, List<Float> list, int pos) {
     Float x = (float) 0.0;
-    Scanner sc = null; // creates scanner
+    
     try {
       sc = new Scanner(new File(file));
 
       // Check if there is another line of input
       while (sc.hasNextLine()) {
-        String str = sc.nextLine();
-        // parse row and find desired cell
+        
         try{
+          String str = sc.nextLine();
+          // parse row and find desired cell
           x = Float.parseFloat(returnArg(str, pos));
           // adds cell value to list
           list.add(x);
+        }
+        catch (IllegalStateException IllegalStateException){
+          break;
         }
         catch (NumberFormatException numberFormatException){
       
@@ -150,7 +156,8 @@ public class FileLogger {
       exp.printStackTrace();
     } finally {
       if (sc != null)
-        sc.close();
+        sc.reset();
+      
     }
   }
 

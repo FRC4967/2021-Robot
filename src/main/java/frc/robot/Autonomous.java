@@ -12,13 +12,16 @@ Why: IDK
 package frc.robot;
 
 import java.lang.Math;
+
+import javax.annotation.processing.Filer;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.util.Scanner;
+//import java.util.Scanner;
 //import edu.wpi.first.wpilibj.AnalogInput;
 //import edu.wpi.first.wpilibj.Encoder;
 
@@ -82,6 +85,7 @@ public class Autonomous {
         arctracker = 0;
         chainTracker = 0;
         timerForward.reset();
+        autonTimer.stop();
         autonTimer.reset();
         first = true;
 
@@ -102,6 +106,10 @@ public class Autonomous {
         // Prints
 
         // add to list if needed
+        FileLogger.sc = null;
+        PathInterpolator.raw_l.clear();
+        PathInterpolator.raw_r.clear();
+        PathInterpolator.raw_t.clear();
     }
 
     public static void autonDis() {
@@ -523,7 +531,7 @@ public class Autonomous {
                 break;
             case 1:
 
-                System.out.println("Case One");
+                
 
                 PFFDriveSpin(0.25, 0, Drive_Train.spinDistanceCalculator(30));
                 if (Math.abs(Drive_Train.RightMotorEncoder.getPosition()) > -Drive_Train.spinDistanceCalculator(30) + 1
@@ -567,6 +575,7 @@ public class Autonomous {
         switch (autoTracker) {
             case 0:
                 if (PathInterpolator.sequencer < 1) {
+                    System.out.println(PathInterpolator.sequencer);
                     Interpolator.setAll(someFile);
                 } else {
                     autonTimer.stop();
@@ -578,7 +587,7 @@ public class Autonomous {
             case 1:
                 PFFDriveRight(0.25, 0, Interpolator.calcPositions((float) autonTimer.get())[1]);
                 PFFDriveLeft(0.25, 0, Interpolator.calcPositions((float) autonTimer.get())[0]);
-
+                break;
         }
     }
 
