@@ -63,7 +63,7 @@ public class Intake {
             }
         }
 
-        if (OI.intakeRunIn == true) {
+        if (OI.Right_Joystick.getRawButton(1) == true) {
             //Button to run intake forward
             IntakeHigh.set(ControlMode.PercentOutput, RobotMap.INTAKE_HIGH_TRIGG);
             IntakeLow.set(ControlMode.PercentOutput, RobotMap.INTAKE_LOW_TRIGG);

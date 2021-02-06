@@ -77,11 +77,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    Autonomous.autonInit();
     FinalShooter.FinalSHTInit();
 
     FinalShooter.shuteInit();
     Drive_Train.DriveAndrew();
-
+    FileLogger.createFile("test");
   }
 
   @Override
@@ -95,14 +96,9 @@ public class Robot extends TimedRobot {
     Drive_Train.drive();
     FinalShooter.trauma();
     Climber.Climb();
-    // OUTDATED CAMERA CODE. Delete when updated with LimeLight.
-    if (OI.Right_Joystick.getRawButtonPressed(7)) {
-      System.out.println("Setting camera 2");
-      cameraSelection.setString(camera2.getName());
-    } else if (OI.Right_Joystick.getRawButtonReleased(7)) {
-      System.out.println("Setting camera 1");
-      cameraSelection.setString(camera1.getName());
-    }
+    
+    Autonomous.learnMode();
+    
   }
 
   @Override
@@ -133,8 +129,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     Autonomous.dataDrive("/media/sda1/test.csv");
-    //Drive_Train.RightMotor.setIdleMode(IdleMode.kCoast);
-    //Drive_Train.LeftMotor.setIdleMode(IdleMode.kCoast);
+    Drive_Train.RightMotor.setIdleMode(IdleMode.kBrake);
+    Drive_Train.LeftMotor.setIdleMode(IdleMode.kBrake);
     //Autonomous.circlePID(3, Math.PI/2, 0.25, 0, false, true);
     //Autonomous.MovePID(2);
     //Autonomous.learnMode();
