@@ -132,17 +132,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    try {
-      Autonomous.exampleAuton("D:\\test.csv");
-    } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    // Drive_Train.RightMotor.setIdleMode(IdleMode.kCoast);
-    // Drive_Train.LeftMotor.setIdleMode(IdleMode.kCoast);
-    // Autonomous.circlePID(3, Math.PI/2, 0.25, 0, false, true);
-    // Autonomous.MovePID(2);
-    // Autonomous.learnMode();
-    // Autonomous.chainFunction();
-  }
+    Autonomous.dataDrive("/media/sda1/test.csv");
+    //Drive_Train.RightMotor.setIdleMode(IdleMode.kCoast);
+    //Drive_Train.LeftMotor.setIdleMode(IdleMode.kCoast);
+    //Autonomous.circlePID(3, Math.PI/2, 0.25, 0, false, true);
+    //Autonomous.MovePID(2);
+    //Autonomous.learnMode();
+    //Autonomous.chainFunction();
+}
 }
