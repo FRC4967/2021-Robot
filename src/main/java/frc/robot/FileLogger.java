@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.util.*;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj.Timer;
 
 import java.io.File;
@@ -46,6 +48,10 @@ public class FileLogger {
       System.out.println("An error occurred.");
       e.printStackTrace();
     }
+    Drive_Train.LeftMotor.setIdleMode(IdleMode.kCoast);
+    Drive_Train.LeftMotor.setIdleMode(IdleMode.kBrake);
+
+
   }
 
   /**
@@ -127,12 +133,19 @@ public class FileLogger {
       while (sc.hasNextLine()) {
         String str = sc.nextLine();
         // parse row and find desired cell
-        x = Float.parseFloat(returnArg(str, pos));
-        // adds cell value to list
-        list.add(x);
+        try{
+          x = Float.parseFloat(returnArg(str, pos));
+          // adds cell value to list
+          list.add(x);
+        }
+        catch (NumberFormatException numberFormatException){
+      
+        }
 
       }
-    } catch (IOException exp) {
+    
+    } 
+    catch (IOException exp) {
       // TODO Auto-generated catch block
       exp.printStackTrace();
     } finally {

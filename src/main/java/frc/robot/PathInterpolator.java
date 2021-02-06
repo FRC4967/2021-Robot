@@ -37,14 +37,14 @@ public class PathInterpolator {
 
     static Boolean init = false;
 
-    int sequencer = 0;
+    static int sequencer = 0;
 
     public void setAll(String fileName) {
         FileLogger.scanToList(fileName, raw_r, 0);
         FileLogger.scanToList(fileName, raw_l, 1);
         FileLogger.scanToList(fileName, raw_t, 2);
         right_Drive = SplineInterpolator.createMonotoneCubicSpline(raw_t, raw_r);
-        left_Drive = SplineInterpolator.createMonotoneCubicSpline(raw_t, raw_r);
+        left_Drive = SplineInterpolator.createMonotoneCubicSpline(raw_t, raw_l);
         sequencer++;
     }
 

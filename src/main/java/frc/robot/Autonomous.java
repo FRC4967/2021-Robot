@@ -78,9 +78,11 @@ public class Autonomous {
         autoTracker = 0;
         shootTracker = 0;
         routineTracker = 0;
+        PathInterpolator.sequencer = 0;
         arctracker = 0;
         chainTracker = 0;
         timerForward.reset();
+        autonTimer.reset();
         first = true;
 
         // reset motor values
@@ -560,12 +562,11 @@ public class Autonomous {
     public static void learnMode(String name, double[] arguments) {
         FileLogger.writeFile(name, arguments);
     }
-
     public static void exampleAuton(String someFile) throws Exception {
         // Untested, general idea of how the code is probably supposed to run.
         switch (autoTracker) {
             case 0:
-                if (Interpolator.sequencer < 1) {
+                if (PathInterpolator.sequencer < 1) {
                     Interpolator.setAll(someFile);
                 } else {
                     autonTimer.stop();
@@ -575,10 +576,19 @@ public class Autonomous {
                 }
                 break;
             case 1:
-                PFFDriveRight(0.25, 0, Interpolator.calcPositions((float) autonTimer.get())[0]);
                 PFFDriveRight(0.25, 0, Interpolator.calcPositions((float) autonTimer.get())[1]);
+                PFFDriveLeft(0.25, 0, Interpolator.calcPositions((float) autonTimer.get())[0]);
 
         }
+    }
+
+    public static void dataDrive(String someFile){
+        try {
+            exampleAuton(someFile);
+          } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
     }
 
     public static void chainFunction() {
