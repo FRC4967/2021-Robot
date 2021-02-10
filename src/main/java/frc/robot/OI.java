@@ -15,11 +15,7 @@ public class OI {
     public static Joystick Right_Joystick = new Joystick(1);
     public static Joystick Manipulator_Joystick = new Joystick(2);
 
-    public static boolean climberFwdButton = Right_Joystick.getRawButton(9);
-    public static boolean climberRevButton = Right_Joystick.getRawButton(6);
-    public static boolean climberSftyLockButton = OI.Manipulator_Joystick.getRawButton(11);
-
-    //shooter button IDs
+    // shooter button IDs
     public static final int SHOOT_TRIGG = 1;
     public static final int QUIT_ALL = 2;
     public static final int BELT_R = 4;
@@ -28,7 +24,7 @@ public class OI {
     public static final int SPEED_MID = 10;
     public static final int SPEED_LO = 8;
 
-    //Command blocks
+    // Command blocks
     public static boolean shoot = Manipulator_Joystick.getRawButton(SHOOT_TRIGG);
     public static boolean stopShooting = Manipulator_Joystick.getRawButtonReleased(SHOOT_TRIGG);
     public static boolean setRefs = Manipulator_Joystick.getRawButtonPressed(SHOOT_TRIGG);
@@ -41,12 +37,11 @@ public class OI {
     public static boolean lightsOn = (Right_Joystick.getPOV() == 180);
     public static boolean lightsOff = (OI.Right_Joystick.getPOV() == -1);
 
+    public static boolean climberFwdButton = Right_Joystick.getRawButton(9);
+    public static boolean climberRevButton = Right_Joystick.getRawButton(6);
+    public static boolean climberSftyLockButton = OI.Manipulator_Joystick.getRawButton(11);
 
-
-
-
-    //Drive_Train Edits
-
+    // Drive_Train Edits
 
     public static boolean rightJoystickStraightLock = Right_Joystick.getRawButton(3);
     public static boolean leftJoystickStraightLock = Left_Joystick.getRawButton(4);
@@ -54,7 +49,35 @@ public class OI {
     public static boolean leftJoystickSpinLock = Left_Joystick.getRawButton(3);
     public static boolean intakeRunIn = Right_Joystick.getRawButton(1);
     public static boolean intakeRunOut = Left_Joystick.getRawButton(1);
-    //Control IDs
-    
+
+    public static void OIUpdate() {
+
+        // Command blocks
+        shoot = Manipulator_Joystick.getRawButton(SHOOT_TRIGG);
+        stopShooting = Manipulator_Joystick.getRawButtonReleased(SHOOT_TRIGG);
+        setRefs = Manipulator_Joystick.getRawButtonPressed(SHOOT_TRIGG);
+        quitAll = Manipulator_Joystick.getRawButton(QUIT_ALL);
+        beltRev = Manipulator_Joystick.getRawButton(BELT_R);
+        beltFWD = Manipulator_Joystick.getRawButton(BELT_F);
+        longRange = Manipulator_Joystick.getRawButtonPressed(SPEED_HI);
+        midRange = Manipulator_Joystick.getRawButtonPressed(SPEED_MID);
+        shortRange = Manipulator_Joystick.getRawButtonPressed(SPEED_LO);
+        lightsOn = (Right_Joystick.getPOV() == 180);
+        lightsOff = (OI.Right_Joystick.getPOV() == -1);
+
+        climberFwdButton = Right_Joystick.getRawButton(9);
+        climberRevButton = Right_Joystick.getRawButton(6);
+        climberSftyLockButton = OI.Manipulator_Joystick.getRawButton(11);
+
+        // Drive_Train Edits
+
+        rightJoystickStraightLock = Right_Joystick.getRawButton(3);
+        leftJoystickStraightLock = Left_Joystick.getRawButton(4);
+        rightJoystickSpinLock = Right_Joystick.getRawButton(4);
+        leftJoystickSpinLock = Left_Joystick.getRawButton(3);
+        intakeRunIn = Right_Joystick.getRawButton(1);
+        intakeRunOut = Left_Joystick.getRawButton(1);
+    }
+    // Control IDs
 
 }

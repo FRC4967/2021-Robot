@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.TimedRobot;
 
@@ -73,8 +74,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+    
   }
-
+/*
+SmartDashboard.putNumber("lime", (double) NetworkTableInstance.getDefault().getTable("limelight").getEntry("stream").getNumber(5));
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("stream").setNumber(2);
+*/
   @Override
   public void teleopInit() {
     Autonomous.autonInit();
@@ -90,7 +95,7 @@ public class Robot extends TimedRobot {
     // Shooter prints
     SmartDashboard.putNumber("set top", FinalShooter.topvelocity);
     SmartDashboard.putNumber("set bottom", FinalShooter.bottomvelocity);
-
+    OI.OIUpdate();
     Intake.runIntake();
     Limelight.Target();
     Drive_Train.drive();
