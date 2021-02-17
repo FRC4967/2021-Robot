@@ -17,9 +17,11 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  */
 public class Limelight {
     static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    static NetworkTable entry = NetworkTableInstance.getDefault().getTable("limelight");
     static NetworkTableEntry tx = table.getEntry("tx");
     static NetworkTableEntry ty = table.getEntry("ty");
     static NetworkTableEntry ta = table.getEntry("ta");
+    static double ea = table.getEntry("ta").getDouble(0);
 
     public static void Target() {
         // read values periodically
@@ -31,6 +33,14 @@ public class Limelight {
     SmartDashboard.putNumber("LimelightX", x);
     SmartDashboard.putNumber("LimelightY", y);
     SmartDashboard.putNumber("LimelightArea", area);
+    }
+    public static boolean ballClose(){
+        table.getEntry("pipeline").setNumber(1);
+        if(ea > 3){
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
