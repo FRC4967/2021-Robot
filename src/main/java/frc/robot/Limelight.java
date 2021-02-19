@@ -35,9 +35,13 @@ public class Limelight {
     SmartDashboard.putNumber("LimelightArea", area);
     }
     public static boolean ballClose(){
+        double y = ty.getDouble(0.0);
+        System.out.println("y " + y);
         table.getEntry("pipeline").setNumber(1);
-        if(ea > 3){
+        if(y < 13 && y !=0.0){
             return true;
+
+
         } else {
             return false;
         }
